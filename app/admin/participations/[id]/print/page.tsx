@@ -192,7 +192,7 @@ export default async function PrintParticipationPage({ params }: PageProps) {
           <div className="grid2">
             <div className="field"><label>Titre</label><span>{shootTitle}</span></div>
             <div className="field"><label>Date</label><span>{shootDate}</span></div>
-            <div className="field"><label>Producteur</label><span>OnlyMatt</span></div>
+            <div className="field"><label>Producteur</label><span>OM43 byONLYMATT</span></div>
             {shootLocation && (
               <div className="field"><label>Lieu</label><span>{shootLocation}</span></div>
             )}
