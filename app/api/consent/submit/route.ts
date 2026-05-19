@@ -103,7 +103,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
-    console.error("[consent/submit] DB insert error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[consent/submit] DB insert error:", message);
+    return NextResponse.json({ error: "Internal server error", detail: message }, { status: 500 });
   }
 }
