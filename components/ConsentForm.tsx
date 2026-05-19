@@ -279,11 +279,17 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
 
               <div className="h-32 overflow-y-scroll rounded-md border border-input bg-muted/30 px-3 py-2 text-xs text-muted-foreground leading-relaxed">
                 <p className="font-semibold mb-1">Contrat de cession de droits à l&apos;image et consentement éclairé</p>
-                <p>En signant ce formulaire, le/la soussigné(e) (ci-après « le Modèle ») autorise irrévocablement le photographe/producteur (ci-après « le Producteur ») et ses ayants droit, cessionnaires et licenciés à utiliser, reproduire, modifier, distribuer et publier les œuvres photographiques et audiovisuelles réalisées lors de la séance visée par le présent document.</p>
-                <p className="mt-1">Cette autorisation porte notamment sur la diffusion sur toute plateforme de contenu pour adultes (incluant sans s&apos;y limiter OnlyFans, Fansly, Faphouse) ainsi que tout autre support numérique ou physique, présent ou futur, sans restriction géographique ni temporelle.</p>
-                <p className="mt-1">Le Modèle certifie (1) être âgé(e) d&apos;au moins 18 ans à la date de la séance, (2) que les pièces d&apos;identité fournies sont authentiques et le/la représentent, (3) agir librement, sans contrainte ni état altéré, et (4) avoir lu et compris l&apos;intégralité du présent contrat avant d&apos;apposer sa signature électronique.</p>
-                <p className="mt-1">Conformément aux exigences légales applicables (notamment 18 U.S.C. § 2257 et lois équivalentes), les informations d&apos;identité et documents fournis seront conservés de façon sécurisée pour une durée minimale de sept (7) ans.</p>
-                <p className="mt-1">La présente autorisation est définitive, irrévocable et transmissible. Le Modèle renonce à tout recours lié à l&apos;utilisation des œuvres dans le cadre prévu aux présentes.</p>
+                <p>En signant ce formulaire, le/la soussigné(e) (ci-après « le Modèle ») autorise irrévocablement le photographe/producteur (ci-après « le Producteur ») et ses ayants droit, cessionnaires et licenciés à utiliser, reproduire, modifier, distribuer, publier et concéder sous licence les œuvres photographiques et audiovisuelles réalisées lors de la séance visée par le présent document.</p>
+                <p className="mt-2">Cette autorisation porte notamment sur l&apos;exploitation commerciale et la diffusion sur toute plateforme de contenu numérique, de réseaux sociaux ou de plateformes pour adultes (incluant sans s&apos;y limiter OnlyFans, Fansly, Faphouse) ainsi que sur tout autre support numérique ou physique, présent ou futur, sans restriction géographique ni temporelle. Le Modèle reconnaît que cette cession est consentie à titre définitif et n&apos;ouvre droit à aucune rémunération ultérieure, redevance (royalties) ou droit de regard sur l&apos;utilisation du matériel.</p>
+                <p className="mt-2 font-medium">Le Modèle certifie sous peine de parjure :</p>
+                <ul className="mt-1 list-disc pl-4 space-y-1">
+                  <li>Être âgé(e) d&apos;au moins 18 ans à la date de la séance et avoir la pleine capacité juridique.</li>
+                  <li>Que les pièces d&apos;identité fournies sont authentiques, valides et le/la représentent fidèlement.</li>
+                  <li>Agir librement, de manière éclairée, sans contrainte, menace ni état altéré par une quelconque substance.</li>
+                  <li>Avoir lu, compris et accepté l&apos;intégralité du présent contrat avant d&apos;apposer sa signature électronique.</li>
+                </ul>
+                <p className="mt-2">Conformément aux exigences légales internationales applicables à la production de contenu pour adultes (notamment les normes de type 18 U.S.C. § 2257 et lois équivalentes sur la vérification des dossiers), les informations d&apos;identité, signatures et documents de vérification fournis seront conservés de façon strictement confidentielle et sécurisée pour la durée minimale exigée par la loi.</p>
+                <p className="mt-2">La présente autorisation est définitive, irrévocable, exclusive et transmissible. Le Modèle renonce expressément à toute réclamation, poursuite ou recours lié à l&apos;utilisation, la modification ou la publication des œuvres dans le cadre prévu aux présentes.</p>
               </div>
 
               <SignaturePad
