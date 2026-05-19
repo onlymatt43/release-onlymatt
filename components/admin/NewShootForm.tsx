@@ -14,7 +14,6 @@ export default function NewShootForm() {
   const [form, setForm] = useState({
     title: "",
     shootDate: today,
-    photographer: "",
     location: "",
     category: "",
     notes: "",
@@ -65,13 +64,6 @@ export default function NewShootForm() {
               <Label htmlFor="shootDate">Date du shoot *</Label>
               <Input id="shootDate" type="date" value={form.shootDate}
                 onChange={(e) => set("shootDate", e.target.value)} required />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <Label htmlFor="photographer">Photographe *</Label>
-              <Input id="photographer" value={form.photographer}
-                onChange={(e) => set("photographer", e.target.value)}
-                placeholder="Ton nom" required />
             </div>
 
             <div className="flex flex-col gap-1">

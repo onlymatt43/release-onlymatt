@@ -25,16 +25,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
-  const { title, shootDate, photographer, location, category, notes } = body as Record<string, unknown>;
+  const { title, shootDate, location, category, notes } = body as Record<string, unknown>;
 
   if (typeof title !== "string" || !title.trim()) {
     return NextResponse.json({ error: "title requis" }, { status: 422 });
   }
   if (typeof shootDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(shootDate)) {
     return NextResponse.json({ error: "shootDate invalide (YYYY-MM-DD)" }, { status: 422 });
-  }
-  if (typeof photographer !== "string" || !photographer.trim()) {
-    return NextResponse.json({ error: "photographer requis" }, { status: 422 });
   }
 
   try {
@@ -46,7 +43,7 @@ export async function POST(req: NextRequest) {
       args: {
         title: title.trim(),
         shootDate,
-        photographer: (photographer as string).trim(),
+        photographer: "OnlyMatt",
         location: typeof location === "string" ? location.trim() || null : null,
         category: typeof category === "string" ? category.trim() || null : null,
         notes: typeof notes === "string" ? notes.trim() || null : null,
