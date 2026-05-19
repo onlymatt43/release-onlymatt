@@ -4,7 +4,8 @@ import { getDb } from "@/lib/db";
 interface SubmitPayload {
   shootId: string;
   legalName: string;
-  stageName?: string;
+  stageName: string;
+  mainUrl: string;
   birthDate: string;
   email: string;
   phone?: string;
@@ -44,6 +45,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "shootId is required" }, { status: 422 });
   if (!p.legalName || typeof p.legalName !== "string" || p.legalName.trim().length < 2)
     return NextResponse.json({ error: "legalName is required" }, { status: 422 });
+  if (!p.stageName || typeof p.stageName !== "string" || p.stageName.trim().length < 2)
+    return NextResponse.json({ error: "stageName is required" }, { status: 422 });
+  if (!p.mainUrl || typeof p.mainUrl !== "string" || p.mainUrl.trim().length < 5)
+    return NextResponse.json({ error: "mainUrl is required" }, { status: 422 });
   if (!p.birthDate || !isValidDate(p.birthDate))
     return NextResponse.json({ error: "birthDate must be YYYY-MM-DD" }, { status: 422 });
   if (!p.email || !isValidEmail(p.email))
@@ -69,13 +74,13 @@ export async function POST(req: NextRequest) {
     const db = getDb();
     await db.execute({
       sql: `INSERT INTO contracts (
-              shoot_id, legal_name, stage_name, birth_date, email, phone, address,
+              shoot_id, legal_name, stage_name, main_url, birth_date, email, phone, address,
               signature_data,
               recto_id_key, verso_id_key, selfie_key,
               consent_recording, consent_publication, consent_adult,
               ip_address, user_agent
             ) VALUES (
-              :shootId, :legalName, :stageName, :birthDate, :email, :phone, :address,
+              :shootId, :legalName, :stageName, :mainUrl, :birthDate, :email, :phone, :address,
               :signatureData,
               :rectoIdKey, :versoIdKey, :selfieKey,
               :consentRecording, :consentPublication, :consentAdult,
@@ -84,7 +89,8 @@ export async function POST(req: NextRequest) {
       args: {
         shootId: p.shootId,
         legalName: p.legalName.trim(),
-        stageName: p.stageName?.trim() ?? null,
+        stageName: p.stageName.trim(),
+        mainUrl: p.mainUrl.trim(),
         birthDate: p.birthDate,
         email: p.email.toLowerCase().trim(),
         phone: p.phone?.trim() ?? null,

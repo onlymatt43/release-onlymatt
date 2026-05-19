@@ -24,6 +24,7 @@ const SignaturePad = dynamic(() => import("@/components/SignaturePad"), {
 interface FormState {
   legalName: string;
   stageName: string;
+  mainUrl: string;
   birthDate: string;
   email: string;
   phone: string;
@@ -39,6 +40,8 @@ interface FormState {
 
 interface ConsentFormProps {
   shootId: string;
+  shootTitle?: string;
+  shootDate?: string;
 }
 
 function getEighteenYearsAgo(): string {
@@ -47,7 +50,7 @@ function getEighteenYearsAgo(): string {
   return d.toISOString().split("T")[0];
 }
 
-export default function ConsentForm({ shootId }: ConsentFormProps) {
+export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentFormProps) {
   const uid = useId();
 
   const [docType, setDocType] = useState("");
@@ -55,6 +58,7 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
   const [form, setForm] = useState<FormState>({
     legalName: "",
     stageName: "",
+    mainUrl: "",
     birthDate: "",
     email: "",
     phone: "",
@@ -81,6 +85,8 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
 
   const isReady =
     form.legalName.trim().length >= 2 &&
+    form.stageName.trim().length >= 2 &&
+    form.mainUrl.trim().length >= 5 &&
     form.birthDate !== "" &&
     docType !== "" &&
     form.email.includes("@") &&
@@ -138,6 +144,12 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle>Model Release Form</CardTitle>
+          {shootTitle && (
+            <div className="mt-1 rounded-md bg-muted px-3 py-2 text-sm">
+              <span className="font-medium">{shootTitle}</span>
+              {shootDate && <span className="text-muted-foreground ml-2">{new Date(shootDate).toLocaleDateString("fr-CA")}</span>}
+            </div>
+          )}
           <CardDescription>
             Tous les champs marqués * sont obligatoires. Tes documents sont chiffrés
             et stockés de façon sécurisée.
@@ -167,13 +179,26 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-stage`}>Nom de scène / Pseudo</Label>
+                <Label htmlFor={`${uid}-stage`}>Nom de scène / Pseudo *</Label>
                 <Input
                   id={`${uid}-stage`}
                   type="text"
-                  placeholder="Optionnel"
+                  placeholder="ex: OnlyMatt"
                   value={form.stageName}
                   onChange={(e) => set("stageName", e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Label htmlFor={`${uid}-mainurl`}>Profil principal X / Twitter *</Label>
+                <Input
+                  id={`${uid}-mainurl`}
+                  type="url"
+                  placeholder="https://x.com/tonpseudo"
+                  value={form.mainUrl}
+                  onChange={(e) => set("mainUrl", e.target.value)}
+                  required
                 />
               </div>
 

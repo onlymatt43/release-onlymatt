@@ -29,6 +29,9 @@ CREATE TABLE IF NOT EXISTS contracts (
   -- Tracé de la signature (data-URL base64 PNG stocké en texte)
   signature_data   TEXT    NOT NULL,
 
+  -- Réseaux sociaux
+  main_url         TEXT,                 -- URL profil principal (X/Twitter)
+
   -- Clés uniques des fichiers dans le bucket R2 (jamais les URLs complètes)
   recto_id_key     TEXT    NOT NULL,     -- ex: contracts/{id}/recto.jpg
   verso_id_key     TEXT    NOT NULL,     -- ex: contracts/{id}/verso.jpg

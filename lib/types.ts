@@ -14,6 +14,7 @@ export interface Contract {
   shoot_id: string;
   legal_name: string;
   stage_name: string | null;
+  main_url: string | null;
   birth_date: string;
   email: string;
   phone: string | null;
