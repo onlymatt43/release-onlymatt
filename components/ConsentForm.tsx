@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FileUploadZone from "@/components/FileUploadZone";
+import AddressAutocomplete from "@/components/AddressAutocomplete";
 
 const SignaturePad = dynamic(() => import("@/components/SignaturePad"), {
   ssr: false,
@@ -255,13 +256,11 @@ export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentF
 
               <div className="flex flex-col gap-1">
                 <Label htmlFor={`${uid}-address`}>Adresse *</Label>
-                <Input
+                <AddressAutocomplete
                   id={`${uid}-address`}
-                  type="text"
-                  autoComplete="street-address"
-                  placeholder="123 Rue Exemple, Montréal, QC H1A 1A1"
                   value={form.address}
-                  onChange={(e) => set("address", e.target.value)}
+                  onChange={(v) => set("address", v)}
+                  placeholder="123 Rue Exemple, Montréal, QC H1A 1A1"
                   required
                 />
               </div>
