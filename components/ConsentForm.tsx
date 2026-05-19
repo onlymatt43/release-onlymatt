@@ -41,8 +41,16 @@ interface ConsentFormProps {
   shootId: string;
 }
 
+function getEighteenYearsAgo(): string {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - 18);
+  return d.toISOString().split("T")[0];
+}
+
 export default function ConsentForm({ shootId }: ConsentFormProps) {
   const uid = useId();
+
+  const [docType, setDocType] = useState("");
 
   const [form, setForm] = useState<FormState>({
     legalName: "",
@@ -74,6 +82,7 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
   const isReady =
     form.legalName.trim().length >= 2 &&
     form.birthDate !== "" &&
+    docType !== "" &&
     form.email.includes("@") &&
     form.address.trim().length >= 5 &&
     form.signatureData !== "" &&
@@ -96,7 +105,7 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
         const res = await fetch("/api/consent/submit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ shootId, ...form }),
+          body: JSON.stringify({ shootId, docType, ...form }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error ?? "Erreur inconnue");
@@ -174,6 +183,7 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
                   id={`${uid}-dob`}
                   type="date"
                   autoComplete="bday"
+                  max={getEighteenYearsAgo()}
                   value={form.birthDate}
                   onChange={(e) => set("birthDate", e.target.value)}
                   required
@@ -225,6 +235,22 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
                 Pièce d&apos;identité
               </h2>
 
+              <div className="flex flex-col gap-1">
+                <Label htmlFor={`${uid}-doctype`}>Type de document *</Label>
+                <select
+                  id={`${uid}-doctype`}
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  value={docType}
+                  onChange={(e) => setDocType(e.target.value)}
+                  required
+                >
+                  <option value="">Choisir…</option>
+                  <option value="passport">Passeport</option>
+                  <option value="drivers_license">Permis de conduire</option>
+                  <option value="id_card">Carte d&apos;identité</option>
+                </select>
+              </div>
+
               <FileUploadZone
                 id={`${uid}-recto`}
                 label="Recto de la pièce d'identité *"
@@ -250,6 +276,16 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Signature *
               </h2>
+
+              <div className="h-32 overflow-y-scroll rounded-md border border-input bg-muted/30 px-3 py-2 text-xs text-muted-foreground leading-relaxed">
+                <p className="font-semibold mb-1">Contrat de cession de droits à l&apos;image et consentement éclairé</p>
+                <p>En signant ce formulaire, le/la soussigné(e) (ci-après « le Modèle ») autorise irrévocablement le photographe/producteur (ci-après « le Producteur ») et ses ayants droit, cessionnaires et licenciés à utiliser, reproduire, modifier, distribuer et publier les œuvres photographiques et audiovisuelles réalisées lors de la séance visée par le présent document.</p>
+                <p className="mt-1">Cette autorisation porte notamment sur la diffusion sur toute plateforme de contenu pour adultes (incluant sans s&apos;y limiter OnlyFans, Fansly, Faphouse) ainsi que tout autre support numérique ou physique, présent ou futur, sans restriction géographique ni temporelle.</p>
+                <p className="mt-1">Le Modèle certifie (1) être âgé(e) d&apos;au moins 18 ans à la date de la séance, (2) que les pièces d&apos;identité fournies sont authentiques et le/la représentent, (3) agir librement, sans contrainte ni état altéré, et (4) avoir lu et compris l&apos;intégralité du présent contrat avant d&apos;apposer sa signature électronique.</p>
+                <p className="mt-1">Conformément aux exigences légales applicables (notamment 18 U.S.C. § 2257 et lois équivalentes), les informations d&apos;identité et documents fournis seront conservés de façon sécurisée pour une durée minimale de sept (7) ans.</p>
+                <p className="mt-1">La présente autorisation est définitive, irrévocable et transmissible. Le Modèle renonce à tout recours lié à l&apos;utilisation des œuvres dans le cadre prévu aux présentes.</p>
+              </div>
+
               <SignaturePad
                 onChange={(data) => set("signatureData", data)}
                 onClear={() => set("signatureData", "")}
