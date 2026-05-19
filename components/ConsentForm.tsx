@@ -13,7 +13,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FileUploadZone from "@/components/FileUploadZone";
-import AddressAutocomplete from "@/components/AddressAutocomplete";
+
+const AddressAutocomplete = dynamic(() => import("@/components/AddressAutocomplete"), {
+  ssr: false,
+  loading: () => (
+    <input
+      type="text"
+      disabled
+      placeholder="123 Rue Exemple, Montréal, QC H1A 1A1"
+      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm opacity-50"
+    />
+  ),
+});
 
 const SignaturePad = dynamic(() => import("@/components/SignaturePad"), {
   ssr: false,
