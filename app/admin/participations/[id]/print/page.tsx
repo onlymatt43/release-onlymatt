@@ -95,7 +95,6 @@ export default async function PrintParticipationPage({ params }: PageProps) {
   const docType     = raw.doc_type as string | null;
 
   const shootTitle    = raw.shoot_title as string;
-  const photographer  = raw.photographer as string;
   const shootLocation = raw.shoot_location as string | null;
   const shootCategory = raw.shoot_category as string | null;
 
@@ -193,7 +192,7 @@ export default async function PrintParticipationPage({ params }: PageProps) {
           <div className="grid2">
             <div className="field"><label>Titre</label><span>{shootTitle}</span></div>
             <div className="field"><label>Date</label><span>{shootDate}</span></div>
-            <div className="field"><label>Photographe</label><span>{photographer}</span></div>
+            <div className="field"><label>Producteur</label><span>OnlyMatt</span></div>
             {shootLocation && (
               <div className="field"><label>Lieu</label><span>{shootLocation}</span></div>
             )}
@@ -225,20 +224,38 @@ export default async function PrintParticipationPage({ params }: PageProps) {
           </div>
         </div>
 
+        {/* Texte du contrat */}
+        <div className="section">
+          <div className="section-title">Contrat de cession de droits à l&apos;image et consentement éclairé</div>
+          <div style={{ fontSize: 11, color: "#333", lineHeight: 1.6 }}>
+            <p>En signant ce formulaire, le/la soussigné(e) (ci-après « le Modèle ») autorise irrévocablement le photographe/producteur (ci-après « le Producteur ») et ses ayants droit, cessionnaires et licenciés à utiliser, reproduire, modifier, distribuer, publier et concéder sous licence les œuvres photographiques et audiovisuelles réalisées lors de la séance visée par le présent document.</p>
+            <p style={{ marginTop: 8 }}>Cette autorisation porte notamment sur l&apos;exploitation commerciale et la diffusion sur toute plateforme de contenu numérique, de réseaux sociaux ou de plateformes pour adultes (incluant sans s&apos;y limiter OnlyFans, Fansly, Faphouse) ainsi que sur tout autre support numérique ou physique, présent ou futur, sans restriction géographique ni temporelle. Le Modèle reconnaît que cette cession est consentie à titre définitif et n&apos;ouvre droit à aucune rémunération ultérieure, redevance (royalties) ou droit de regard sur l&apos;utilisation du matériel.</p>
+            <p style={{ marginTop: 8, fontWeight: 600 }}>Le Modèle certifie sous peine de parjure :</p>
+            <ul style={{ marginTop: 4, paddingLeft: 20, lineHeight: 1.7 }}>
+              <li>Être âgé(e) d&apos;au moins 18 ans à la date de la séance et avoir la pleine capacité juridique.</li>
+              <li>Que les pièces d&apos;identité fournies sont authentiques, valides et le/la représentent fidèlement.</li>
+              <li>Agir librement, de manière éclairée, sans contrainte, menace ni état altéré par une quelconque substance.</li>
+              <li>Avoir lu, compris et accepté l&apos;intégralité du présent contrat avant d&apos;apposer sa signature électronique.</li>
+            </ul>
+            <p style={{ marginTop: 8 }}>Conformément aux exigences légales internationales applicables à la production de contenu pour adultes (notamment les normes de type 18 U.S.C. § 2257 et lois équivalentes sur la vérification des dossiers), les informations d&apos;identité, signatures et documents de vérification fournis seront conservés de façon strictement confidentielle et sécurisée pour la durée minimale exigée par la loi.</p>
+            <p style={{ marginTop: 8 }}>La présente autorisation est définitive, irrévocable, exclusive et transmissible. Le Modèle renonce expressément à toute réclamation, poursuite ou recours lié à l&apos;utilisation, la modification ou la publication des œuvres dans le cadre prévu aux présentes.</p>
+          </div>
+        </div>
+
         {/* Consentements */}
         <div className="section">
           <div className="section-title">Consentements</div>
           <div className="consent-item">
             <Check ok={consentRecording} />
-            <span>Consentement à l&apos;enregistrement audio et vidéo</span>
+            <span>J&apos;autorise l&apos;enregistrement de ma participation.</span>
           </div>
           <div className="consent-item">
             <Check ok={consentPub} />
-            <span>Consentement à la publication et distribution du contenu</span>
+            <span>J&apos;autorise la publication du contenu sur les plateformes prévues (OnlyFans, Faphouse, Fansly, etc.).</span>
           </div>
           <div className="consent-item">
             <Check ok={consentAdult} />
-            <span>Je déclare être majeur(e) et consentir librement à cette séance</span>
+            <span>Je certifie être majeur(e) (18+) et consentir librement et sans contrainte.</span>
           </div>
         </div>
 
