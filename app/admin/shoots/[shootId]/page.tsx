@@ -101,6 +101,7 @@ export default async function ShootDetailPage({ params }: PageProps) {
                   <TableHead>Catégorie</TableHead>
                   <TableHead>Signé le</TableHead>
                   <TableHead>Consentements</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -121,6 +122,13 @@ export default async function ShootDetailPage({ params }: PageProps) {
                         {p.consent_publication ? <Badge className="bg-green-600 text-white text-xs">Publi.</Badge>  : null}
                         {p.consent_adult       ? <Badge className="bg-green-600 text-white text-xs">Majeur</Badge> : null}
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <Link href={`/admin/participations/${p.id}/print`} target="_blank">
+                        <Button variant="outline" size="sm" className="text-xs">
+                          📄 PDF
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
