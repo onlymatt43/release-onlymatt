@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { r2Client, R2_BUCKET } from "@/lib/r2";
+import { getR2Client, R2_BUCKET } from "@/lib/r2";
 
 const ALLOWED_CONTENT_TYPES = new Set([
   "image/jpeg",
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       ContentType: contentType,
     });
 
-    const url = await getSignedUrl(r2Client, command, {
+    const url = await getSignedUrl(getR2Client(), command, {
       expiresIn: PRESIGNED_URL_TTL_SECONDS,
     });
 
