@@ -6,6 +6,7 @@ interface SubmitPayload {
   legalName: string;
   stageName: string;
   mainUrl: string;
+  category?: string;
   birthDate: string;
   email: string;
   phone?: string;
@@ -74,13 +75,13 @@ export async function POST(req: NextRequest) {
     const db = getDb();
     await db.execute({
       sql: `INSERT INTO contracts (
-              shoot_id, legal_name, stage_name, main_url, birth_date, email, phone, address,
+              shoot_id, legal_name, stage_name, main_url, category, birth_date, email, phone, address,
               signature_data,
               recto_id_key, verso_id_key, selfie_key,
               consent_recording, consent_publication, consent_adult,
               ip_address, user_agent
             ) VALUES (
-              :shootId, :legalName, :stageName, :mainUrl, :birthDate, :email, :phone, :address,
+              :shootId, :legalName, :stageName, :mainUrl, :category, :birthDate, :email, :phone, :address,
               :signatureData,
               :rectoIdKey, :versoIdKey, :selfieKey,
               :consentRecording, :consentPublication, :consentAdult,
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
         legalName: p.legalName.trim(),
         stageName: p.stageName.trim(),
         mainUrl: p.mainUrl.trim(),
+        category: p.category?.trim() || null,
         birthDate: p.birthDate,
         email: p.email.toLowerCase().trim(),
         phone: p.phone?.trim() ?? null,

@@ -23,7 +23,7 @@ export default async function ShootDetailPage({ params }: PageProps) {
   const [shootResult, contractsResult] = await Promise.all([
     db.execute({ sql: "SELECT * FROM shoots WHERE id = ?", args: [shootId] }),
     db.execute({
-      sql: `SELECT id, legal_name, stage_name, email, phone, signed_at,
+      sql: `SELECT id, legal_name, stage_name, category, email, phone, signed_at,
                    consent_recording, consent_publication, consent_adult
             FROM contracts WHERE shoot_id = ? ORDER BY signed_at DESC`,
       args: [shootId],
@@ -102,7 +102,10 @@ export default async function ShootDetailPage({ params }: PageProps) {
               <TableBody>
                 {contracts.map((c) => (
                   <TableRow key={c.id}>
-                    <TableCell className="font-medium">{c.legal_name}{c.stage_name ? <span className="text-muted-foreground text-xs ml-1">({c.stage_name})</span> : null}</TableCell>
+                    <TableCell className="font-medium">
+                      {c.legal_name}
+                      <span className="text-muted-foreground text-xs ml-1">({c.category ?? c.stage_name})</span>
+                    </TableCell>
                     <TableCell className="text-muted-foreground text-sm">{c.email}</TableCell>
                     <TableCell className="text-sm">
                       {new Date(c.signed_at).toLocaleString("fr-CA")}

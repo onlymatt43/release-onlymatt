@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS contracts (
 
   -- Réseaux sociaux
   main_url         TEXT,                 -- URL profil principal (X/Twitter)
+  category         TEXT,                 -- Tournage/catégorie libre (défaut: nom de scène)
 
   -- Clés uniques des fichiers dans le bucket R2 (jamais les URLs complètes)
   recto_id_key     TEXT    NOT NULL,     -- ex: contracts/{id}/recto.jpg

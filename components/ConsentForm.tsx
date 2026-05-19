@@ -25,6 +25,7 @@ interface FormState {
   legalName: string;
   stageName: string;
   mainUrl: string;
+  category: string;
   birthDate: string;
   email: string;
   phone: string;
@@ -59,6 +60,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentF
     legalName: "",
     stageName: "",
     mainUrl: "",
+    category: "",
     birthDate: "",
     email: "",
     phone: "",
@@ -199,6 +201,17 @@ export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentF
                   value={form.mainUrl}
                   onChange={(e) => set("mainUrl", e.target.value)}
                   required
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Label htmlFor={`${uid}-category`}>Nom du tournage / Catégorie</Label>
+                <Input
+                  id={`${uid}-category`}
+                  type="text"
+                  placeholder="ex: Shoot studio mai 2026 — laissez vide pour utiliser votre nom de scène"
+                  value={form.category}
+                  onChange={(e) => set("category", e.target.value)}
                 />
               </div>
 
