@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isAdminPage = pathname.startsWith("/admin") && !pathname.startsWith("/admin/login");
-  const isAdminApi  = pathname.startsWith("/api/admin");
+  const isAdminApi  = pathname.startsWith("/api/admin") && !pathname.startsWith("/api/admin/auth");
 
   if (isAdminPage || isAdminApi) {
     const secret  = process.env.ADMIN_SECRET;
