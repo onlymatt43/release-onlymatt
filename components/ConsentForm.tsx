@@ -161,7 +161,6 @@ export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentF
           {shootTitle && (
             <div className="mt-1 rounded-md bg-muted px-3 py-2 text-sm">
               <span className="font-medium">{shootTitle}</span>
-              {shootDate && <span className="text-muted-foreground ml-2">{new Date(shootDate).toLocaleDateString("fr-CA")}</span>}
             </div>
           )}
           <CardDescription>
