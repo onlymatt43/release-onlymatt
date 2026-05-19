@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 
 interface SubmitPayload {
   shootId: string;
-  fullName: string;
-  dateOfBirth: string;
+  legalName: string;
+  stageName?: string;
+  birthDate: string;
   email: string;
   phone?: string;
+  address: string;
   signatureData: string;
-  r2KeyIdFront: string;
-  r2KeyIdBack: string;
-  r2KeySelfie: string;
+  rectoIdKey: string;
+  versoIdKey: string;
+  selfieKey: string;
   consentRecording: boolean;
   consentPublication: boolean;
   consentAdult: boolean;
@@ -38,32 +40,25 @@ export async function POST(req: NextRequest) {
 
   const p = body as Partial<SubmitPayload>;
 
-  // --- Validation des champs obligatoires ---
-  if (!p.shootId || typeof p.shootId !== "string") {
+  if (!p.shootId || typeof p.shootId !== "string")
     return NextResponse.json({ error: "shootId is required" }, { status: 422 });
-  }
-  if (!p.fullName || typeof p.fullName !== "string" || p.fullName.trim().length < 2) {
-    return NextResponse.json({ error: "fullName is required" }, { status: 422 });
-  }
-  if (!p.dateOfBirth || !isValidDate(p.dateOfBirth)) {
-    return NextResponse.json({ error: "dateOfBirth must be YYYY-MM-DD" }, { status: 422 });
-  }
-  if (!p.email || !isValidEmail(p.email)) {
+  if (!p.legalName || typeof p.legalName !== "string" || p.legalName.trim().length < 2)
+    return NextResponse.json({ error: "legalName is required" }, { status: 422 });
+  if (!p.birthDate || !isValidDate(p.birthDate))
+    return NextResponse.json({ error: "birthDate must be YYYY-MM-DD" }, { status: 422 });
+  if (!p.email || !isValidEmail(p.email))
     return NextResponse.json({ error: "A valid email is required" }, { status: 422 });
-  }
-  if (!p.signatureData || !p.signatureData.startsWith("data:image/")) {
+  if (!p.address || typeof p.address !== "string" || p.address.trim().length < 5)
+    return NextResponse.json({ error: "address is required" }, { status: 422 });
+  if (!p.signatureData || !p.signatureData.startsWith("data:image/"))
     return NextResponse.json({ error: "signatureData must be a valid image data-URL" }, { status: 422 });
-  }
-  for (const keyField of ["r2KeyIdFront", "r2KeyIdBack", "r2KeySelfie"] as const) {
-    if (!isValidR2Key(p[keyField] ?? "")) {
+  for (const keyField of ["rectoIdKey", "versoIdKey", "selfieKey"] as const) {
+    if (!isValidR2Key(p[keyField] ?? ""))
       return NextResponse.json({ error: `${keyField} is invalid` }, { status: 422 });
-    }
   }
-  if (!p.consentRecording || !p.consentPublication || !p.consentAdult) {
+  if (!p.consentRecording || !p.consentPublication || !p.consentAdult)
     return NextResponse.json({ error: "All consents must be accepted" }, { status: 422 });
-  }
 
-  // --- Collecte de métadonnées d'audit (sans exposer de PII via headers) ---
   const ipAddress =
     req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
     req.headers.get("x-real-ip") ??
@@ -71,30 +66,33 @@ export async function POST(req: NextRequest) {
   const userAgent = req.headers.get("user-agent") ?? null;
 
   try {
+    const db = getDb();
     await db.execute({
       sql: `INSERT INTO contracts (
-              shoot_id, full_name, date_of_birth, email, phone,
+              shoot_id, legal_name, stage_name, birth_date, email, phone, address,
               signature_data,
-              r2_key_id_front, r2_key_id_back, r2_key_selfie,
+              recto_id_key, verso_id_key, selfie_key,
               consent_recording, consent_publication, consent_adult,
               ip_address, user_agent
             ) VALUES (
-              :shootId, :fullName, :dateOfBirth, :email, :phone,
+              :shootId, :legalName, :stageName, :birthDate, :email, :phone, :address,
               :signatureData,
-              :r2KeyIdFront, :r2KeyIdBack, :r2KeySelfie,
+              :rectoIdKey, :versoIdKey, :selfieKey,
               :consentRecording, :consentPublication, :consentAdult,
               :ipAddress, :userAgent
             )`,
       args: {
         shootId: p.shootId,
-        fullName: p.fullName.trim(),
-        dateOfBirth: p.dateOfBirth,
+        legalName: p.legalName.trim(),
+        stageName: p.stageName?.trim() ?? null,
+        birthDate: p.birthDate,
         email: p.email.toLowerCase().trim(),
-        phone: p.phone ?? null,
+        phone: p.phone?.trim() ?? null,
+        address: p.address.trim(),
         signatureData: p.signatureData,
-        r2KeyIdFront: p.r2KeyIdFront!,
-        r2KeyIdBack: p.r2KeyIdBack!,
-        r2KeySelfie: p.r2KeySelfie!,
+        rectoIdKey: p.rectoIdKey!,
+        versoIdKey: p.versoIdKey!,
+        selfieKey: p.selfieKey!,
         consentRecording: p.consentRecording ? 1 : 0,
         consentPublication: p.consentPublication ? 1 : 0,
         consentAdult: p.consentAdult ? 1 : 0,

@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import FileUploadZone from "@/components/FileUploadZone";
 
-// Chargement dynamique pour éviter les erreurs SSR avec react-signature-canvas
 const SignaturePad = dynamic(() => import("@/components/SignaturePad"), {
   ssr: false,
   loading: () => (
@@ -23,14 +22,16 @@ const SignaturePad = dynamic(() => import("@/components/SignaturePad"), {
 });
 
 interface FormState {
-  fullName: string;
-  dateOfBirth: string;
+  legalName: string;
+  stageName: string;
+  birthDate: string;
   email: string;
   phone: string;
+  address: string;
   signatureData: string;
-  r2KeyIdFront: string;
-  r2KeyIdBack: string;
-  r2KeySelfie: string;
+  rectoIdKey: string;
+  versoIdKey: string;
+  selfieKey: string;
   consentRecording: boolean;
   consentPublication: boolean;
   consentAdult: boolean;
@@ -41,17 +42,19 @@ interface ConsentFormProps {
 }
 
 export default function ConsentForm({ shootId }: ConsentFormProps) {
-  const uid = useId(); // préfixe unique pour éviter les collisions d'ID
+  const uid = useId();
 
   const [form, setForm] = useState<FormState>({
-    fullName: "",
-    dateOfBirth: "",
+    legalName: "",
+    stageName: "",
+    birthDate: "",
     email: "",
     phone: "",
+    address: "",
     signatureData: "",
-    r2KeyIdFront: "",
-    r2KeyIdBack: "",
-    r2KeySelfie: "",
+    rectoIdKey: "",
+    versoIdKey: "",
+    selfieKey: "",
     consentRecording: false,
     consentPublication: false,
     consentAdult: false,
@@ -69,13 +72,14 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
   );
 
   const isReady =
-    form.fullName.trim().length >= 2 &&
-    form.dateOfBirth !== "" &&
+    form.legalName.trim().length >= 2 &&
+    form.birthDate !== "" &&
     form.email.includes("@") &&
+    form.address.trim().length >= 5 &&
     form.signatureData !== "" &&
-    form.r2KeyIdFront !== "" &&
-    form.r2KeyIdBack !== "" &&
-    form.r2KeySelfie !== "" &&
+    form.rectoIdKey !== "" &&
+    form.versoIdKey !== "" &&
+    form.selfieKey !== "" &&
     form.consentRecording &&
     form.consentPublication &&
     form.consentAdult;
@@ -112,7 +116,7 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
           <CardHeader>
             <CardTitle className="text-green-600">Consentement enregistré ✓</CardTitle>
             <CardDescription>
-              Merci {form.fullName.split(" ")[0]}. Votre formulaire a bien été soumis.
+              Merci {form.legalName.split(" ")[0]}. Ton formulaire a bien été soumis.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -124,10 +128,10 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-lg">
         <CardHeader>
-          <CardTitle>Formulaire de consentement</CardTitle>
+          <CardTitle>Model Release Form</CardTitle>
           <CardDescription>
-            Tous les champs sont obligatoires. Vos documents sont chiffrés et
-            stockés de façon sécurisée.
+            Tous les champs marqués * sont obligatoires. Tes documents sont chiffrés
+            et stockés de façon sécurisée.
           </CardDescription>
         </CardHeader>
 
@@ -141,37 +145,48 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
               </h2>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-name`}>Nom complet</Label>
+                <Label htmlFor={`${uid}-legal`}>Nom légal (pièce d&apos;identité) *</Label>
                 <Input
-                  id={`${uid}-name`}
+                  id={`${uid}-legal`}
                   type="text"
                   autoComplete="name"
                   placeholder="Prénom NOM"
-                  value={form.fullName}
-                  onChange={(e) => set("fullName", e.target.value)}
+                  value={form.legalName}
+                  onChange={(e) => set("legalName", e.target.value)}
                   required
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-dob`}>Date de naissance</Label>
+                <Label htmlFor={`${uid}-stage`}>Nom de scène / Pseudo</Label>
+                <Input
+                  id={`${uid}-stage`}
+                  type="text"
+                  placeholder="Optionnel"
+                  value={form.stageName}
+                  onChange={(e) => set("stageName", e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Label htmlFor={`${uid}-dob`}>Date de naissance *</Label>
                 <Input
                   id={`${uid}-dob`}
                   type="date"
                   autoComplete="bday"
-                  value={form.dateOfBirth}
-                  onChange={(e) => set("dateOfBirth", e.target.value)}
+                  value={form.birthDate}
+                  onChange={(e) => set("birthDate", e.target.value)}
                   required
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-email`}>Email</Label>
+                <Label htmlFor={`${uid}-email`}>Email *</Label>
                 <Input
                   id={`${uid}-email`}
                   type="email"
                   autoComplete="email"
-                  placeholder="vous@exemple.com"
+                  placeholder="toi@exemple.com"
                   value={form.email}
                   onChange={(e) => set("email", e.target.value)}
                   required
@@ -179,48 +194,61 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-phone`}>Téléphone (optionnel)</Label>
+                <Label htmlFor={`${uid}-phone`}>Téléphone</Label>
                 <Input
                   id={`${uid}-phone`}
                   type="tel"
                   autoComplete="tel"
-                  placeholder="+33 6 xx xx xx xx"
+                  placeholder="+1 514 xxx xxxx"
                   value={form.phone}
                   onChange={(e) => set("phone", e.target.value)}
                 />
               </div>
+
+              <div className="flex flex-col gap-1">
+                <Label htmlFor={`${uid}-address`}>Adresse *</Label>
+                <Input
+                  id={`${uid}-address`}
+                  type="text"
+                  autoComplete="street-address"
+                  placeholder="123 Rue Exemple, Montréal, QC H1A 1A1"
+                  value={form.address}
+                  onChange={(e) => set("address", e.target.value)}
+                  required
+                />
+              </div>
             </section>
 
-            {/* ── Documents d'identité ── */}
+            {/* ── Pièce d'identité ── */}
             <section className="flex flex-col gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Pièce d&apos;identité
               </h2>
 
               <FileUploadZone
-                id={`${uid}-id-front`}
-                label="Recto de la pièce d'identité"
-                r2Key={`contracts/${contractId}/id_front.jpg`}
-                onUploaded={(k) => set("r2KeyIdFront", k)}
+                id={`${uid}-recto`}
+                label="Recto de la pièce d'identité *"
+                r2Key={`contracts/${contractId}/recto.jpg`}
+                onUploaded={(k) => set("rectoIdKey", k)}
               />
               <FileUploadZone
-                id={`${uid}-id-back`}
-                label="Verso de la pièce d'identité"
-                r2Key={`contracts/${contractId}/id_back.jpg`}
-                onUploaded={(k) => set("r2KeyIdBack", k)}
+                id={`${uid}-verso`}
+                label="Verso de la pièce d'identité *"
+                r2Key={`contracts/${contractId}/verso.jpg`}
+                onUploaded={(k) => set("versoIdKey", k)}
               />
               <FileUploadZone
                 id={`${uid}-selfie`}
-                label="Selfie avec la pièce d'identité"
+                label="Selfie avec la pièce d'identité *"
                 r2Key={`contracts/${contractId}/selfie.jpg`}
-                onUploaded={(k) => set("r2KeySelfie", k)}
+                onUploaded={(k) => set("selfieKey", k)}
               />
             </section>
 
             {/* ── Signature ── */}
             <section className="flex flex-col gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Signature
+                Signature *
               </h2>
               <SignaturePad
                 onChange={(data) => set("signatureData", data)}
@@ -231,7 +259,7 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
             {/* ── Consentements ── */}
             <section className="flex flex-col gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Consentements
+                Consentements *
               </h2>
 
               {(
@@ -242,11 +270,11 @@ export default function ConsentForm({ shootId }: ConsentFormProps) {
                   },
                   {
                     key: "consentPublication",
-                    label: "J'autorise la publication du contenu sur les plateformes prévues.",
+                    label: "J'autorise la publication du contenu sur les plateformes prévues (OnlyFans, Faphouse, Fansly, etc.).",
                   },
                   {
                     key: "consentAdult",
-                    label: "Je certifie être majeur(e) et consentir librement.",
+                    label: "Je certifie être majeur(e) (18+) et consentir librement et sans contrainte.",
                   },
                 ] as const
               ).map(({ key, label }) => (

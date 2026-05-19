@@ -12,16 +12,18 @@ export interface Shoot {
 export interface Contract {
   id: string;
   shoot_id: string;
-  full_name: string;
-  date_of_birth: string;
+  legal_name: string;
+  stage_name: string | null;
+  birth_date: string;
   email: string;
   phone: string | null;
-  r2_key_id_front: string;
-  r2_key_id_back: string;
-  r2_key_selfie: string;
+  address: string;
+  recto_id_key: string;
+  verso_id_key: string;
+  selfie_key: string;
   consent_recording: number;
   consent_publication: number;
   consent_adult: number;
   ip_address: string | null;
-  submitted_at: string;
+  signed_at: string;
 }
