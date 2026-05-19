@@ -6,17 +6,17 @@ let _client: S3Client | null = null;
 export function getR2Client(): S3Client {
   if (_client) return _client;
 
-  const accountId = process.env.R2_ACCOUNT_ID;
+  const endpoint = process.env.R2_ENDPOINT;
   const accessKeyId = process.env.R2_ACCESS_KEY_ID;
   const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
 
-  if (!accountId)       throw new Error("Missing env variable: R2_ACCOUNT_ID");
+  if (!endpoint)        throw new Error("Missing env variable: R2_ENDPOINT");
   if (!accessKeyId)     throw new Error("Missing env variable: R2_ACCESS_KEY_ID");
   if (!secretAccessKey) throw new Error("Missing env variable: R2_SECRET_ACCESS_KEY");
 
   _client = new S3Client({
     region: "auto",
-    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    endpoint,
     credentials: { accessKeyId, secretAccessKey },
   });
 
