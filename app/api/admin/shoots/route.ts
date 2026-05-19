@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
-  const { title, shootDate, photographer, location, notes } = body as Record<string, unknown>;
+  const { title, shootDate, photographer, location, category, notes } = body as Record<string, unknown>;
 
   if (typeof title !== "string" || !title.trim()) {
     return NextResponse.json({ error: "title requis" }, { status: 422 });
@@ -40,14 +40,15 @@ export async function POST(req: NextRequest) {
   try {
     const db = getDb();
     const result = await db.execute({
-      sql: `INSERT INTO shoots (title, shoot_date, photographer, location, notes)
-            VALUES (:title, :shootDate, :photographer, :location, :notes)
+      sql: `INSERT INTO shoots (title, shoot_date, photographer, location, category, notes)
+            VALUES (:title, :shootDate, :photographer, :location, :category, :notes)
             RETURNING id`,
       args: {
         title: title.trim(),
         shootDate,
         photographer: (photographer as string).trim(),
         location: typeof location === "string" ? location.trim() || null : null,
+        category: typeof category === "string" ? category.trim() || null : null,
         notes: typeof notes === "string" ? notes.trim() || null : null,
       },
     });

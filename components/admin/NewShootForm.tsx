@@ -16,6 +16,7 @@ export default function NewShootForm() {
     shootDate: today,
     photographer: "",
     location: "",
+    category: "",
     notes: "",
   });
   const [loading, setLoading] = useState(false);
@@ -78,6 +79,13 @@ export default function NewShootForm() {
               <Input id="location" value={form.location}
                 onChange={(e) => set("location", e.target.value)}
                 placeholder="Studio, ville…" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="category">Catégorie / Type de contenu (optionnel)</Label>
+              <Input id="category" value={form.category}
+                onChange={(e) => set("category", e.target.value)}
+                placeholder="ex: OnlyFans, Promo, Adulte…" />
             </div>
 
             <div className="flex flex-col gap-1">

@@ -55,6 +55,7 @@ interface ConsentFormProps {
   shootId: string;
   shootTitle?: string;
   shootDate?: string;
+  shootCategory?: string;
 }
 
 function getEighteenYearsAgo(): string {
@@ -63,7 +64,7 @@ function getEighteenYearsAgo(): string {
   return d.toISOString().split("T")[0];
 }
 
-export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentFormProps) {
+export default function ConsentForm({ shootId, shootTitle, shootDate, shootCategory }: ConsentFormProps) {
   const uid = useId();
 
   const [docType, setDocType] = useState("");
@@ -72,7 +73,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentF
     legalName: "",
     stageName: "",
     mainUrl: "",
-    category: "",
+    category: shootCategory ?? "",
     birthDate: "",
     email: "",
     phone: "",
@@ -215,16 +216,14 @@ export default function ConsentForm({ shootId, shootTitle, shootDate }: ConsentF
                 />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-category`}>Nom du tournage / Catégorie</Label>
-                <Input
-                  id={`${uid}-category`}
-                  type="text"
-                  placeholder="ex: Shoot studio mai 2026 — laissez vide pour utiliser votre nom de scène"
-                  value={form.category}
-                  onChange={(e) => set("category", e.target.value)}
-                />
-              </div>
+              {shootCategory && (
+                <div className="flex flex-col gap-1">
+                  <Label>Nom du tournage / Catégorie</Label>
+                  <div className="flex h-9 items-center rounded-md border border-input bg-muted px-3 py-1 text-sm text-muted-foreground">
+                    {shootCategory}
+                  </div>
+                </div>
+              )}
 
               <div className="flex flex-col gap-1">
                 <Label htmlFor={`${uid}-dob`}>Date de naissance *</Label>

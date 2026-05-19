@@ -4,6 +4,7 @@ export interface Shoot {
   shoot_date: string;
   photographer: string;
   location: string | null;
+  category: string | null;
   notes: string | null;
   created_at: string;
   contract_count?: number;
