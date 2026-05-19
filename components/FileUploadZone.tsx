@@ -119,7 +119,6 @@ export default function FileUploadZone({
         id={id}
         type="file"
         accept="image/*"
-        capture="environment"
         disabled={status === "compressing" || status === "uploading"}
         onChange={handleChange}
         className="cursor-pointer"
