@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import QRCodePanel from "@/components/admin/QRCodePanel";
 import LogoutButton from "@/components/admin/LogoutButton";
-import type { Shoot, Contract } from "@/lib/types";
+import type { Shoot, Participation } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{ shootId: string }>;
@@ -23,9 +23,12 @@ export default async function ShootDetailPage({ params }: PageProps) {
   const [shootResult, contractsResult] = await Promise.all([
     db.execute({ sql: "SELECT * FROM shoots WHERE id = ?", args: [shootId] }),
     db.execute({
-      sql: `SELECT id, legal_name, stage_name, category, email, phone, signed_at,
-                   consent_recording, consent_publication, consent_adult
-            FROM contracts WHERE shoot_id = ? ORDER BY signed_at DESC`,
+      sql: `SELECT p.id, p.category, p.consent_recording, p.consent_publication,
+                   p.consent_adult, p.signed_at,
+                   c.legal_name, c.stage_name, c.email
+            FROM participations p
+            JOIN contacts c ON c.id = p.contact_id
+            WHERE p.shoot_id = ? ORDER BY p.signed_at DESC`,
       args: [shootId],
     }),
   ]);
@@ -33,7 +36,7 @@ export default async function ShootDetailPage({ params }: PageProps) {
   if (shootResult.rows.length === 0) notFound();
 
   const shoot = shootResult.rows[0] as unknown as Shoot;
-  const contracts = contractsResult.rows as unknown as Contract[];
+  const participations = contractsResult.rows as unknown as Participation[];
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://release-onlymatt.vercel.app";
   const consentUrl = `${baseUrl}/consent/${shootId}`;
 
@@ -80,14 +83,14 @@ export default async function ShootDetailPage({ params }: PageProps) {
         <div className="rounded-lg border bg-background">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <h2 className="font-semibold">
-              Contrats{" "}
-              <span className="text-muted-foreground font-normal">({contracts.length})</span>
+              Participations{" "}
+              <span className="text-muted-foreground font-normal">({participations.length})</span>
             </h2>
           </div>
 
-          {contracts.length === 0 ? (
+          {participations.length === 0 ? (
             <p className="p-6 text-center text-sm text-muted-foreground">
-              Aucun contrat soumis pour ce shoot.
+              Aucune participation pour ce shoot.
             </p>
           ) : (
             <Table>
@@ -95,26 +98,28 @@ export default async function ShootDetailPage({ params }: PageProps) {
                 <TableRow>
                   <TableHead>Modèle</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Soumis le</TableHead>
+                  <TableHead>Catégorie</TableHead>
+                  <TableHead>Signé le</TableHead>
                   <TableHead>Consentements</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {contracts.map((c) => (
-                  <TableRow key={c.id}>
+                {participations.map((p) => (
+                  <TableRow key={p.id}>
                     <TableCell className="font-medium">
-                      {c.legal_name}
-                      <span className="text-muted-foreground text-xs ml-1">({c.category ?? c.stage_name})</span>
+                      {p.legal_name}
+                      <span className="text-muted-foreground text-xs ml-1">({p.stage_name})</span>
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">{c.email}</TableCell>
+                    <TableCell className="text-muted-foreground text-sm">{p.email}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{p.category ?? p.stage_name}</TableCell>
                     <TableCell className="text-sm">
-                      {new Date(c.signed_at).toLocaleString("fr-CA")}
+                      {new Date(p.signed_at).toLocaleString("fr-CA")}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1 flex-wrap">
-                        {c.consent_recording  ? <Badge className="bg-green-600 text-white text-xs">Enreg.</Badge>  : null}
-                        {c.consent_publication ? <Badge className="bg-green-600 text-white text-xs">Publi.</Badge>  : null}
-                        {c.consent_adult       ? <Badge className="bg-green-600 text-white text-xs">Majeur</Badge> : null}
+                        {p.consent_recording  ? <Badge className="bg-green-600 text-white text-xs">Enreg.</Badge>  : null}
+                        {p.consent_publication ? <Badge className="bg-green-600 text-white text-xs">Publi.</Badge>  : null}
+                        {p.consent_adult       ? <Badge className="bg-green-600 text-white text-xs">Majeur</Badge> : null}
                       </div>
                     </TableCell>
                   </TableRow>

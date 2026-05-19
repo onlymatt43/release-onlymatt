@@ -11,6 +11,7 @@ interface SubmitPayload {
   email: string;
   phone?: string;
   address: string;
+  docType?: string;
   signatureData: string;
   rectoIdKey: string;
   versoIdKey: string;
@@ -23,22 +24,17 @@ interface SubmitPayload {
 function isValidDate(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(value) && !isNaN(Date.parse(value));
 }
-
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
-
 function isValidR2Key(value: string): boolean {
   return typeof value === "string" && value.startsWith("contracts/") && value.length <= 512;
 }
 
 export async function POST(req: NextRequest) {
   let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 }); }
 
   const p = body as Partial<SubmitPayload>;
 
@@ -67,52 +63,84 @@ export async function POST(req: NextRequest) {
 
   const ipAddress =
     req.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
-    req.headers.get("x-real-ip") ??
-    null;
+    req.headers.get("x-real-ip") ?? null;
   const userAgent = req.headers.get("user-agent") ?? null;
+  const now = new Date().toISOString();
+  const email = p.email.toLowerCase().trim();
 
   try {
     const db = getDb();
+
+    // 1. Upsert contact (créer ou mettre à jour par email)
     await db.execute({
-      sql: `INSERT INTO contracts (
-              shoot_id, legal_name, stage_name, main_url, category, birth_date, email, phone, address,
-              signature_data,
-              recto_id_key, verso_id_key, selfie_key,
-              consent_recording, consent_publication, consent_adult,
-              ip_address, user_agent
-            ) VALUES (
-              :shootId, :legalName, :stageName, :mainUrl, :category, :birthDate, :email, :phone, :address,
-              :signatureData,
-              :rectoIdKey, :versoIdKey, :selfieKey,
-              :consentRecording, :consentPublication, :consentAdult,
-              :ipAddress, :userAgent
-            )`,
+      sql: `INSERT INTO contacts
+              (legal_name, stage_name, main_url, birth_date, email, phone, address,
+               doc_type, recto_id_key, verso_id_key, selfie_key, updated_at)
+            VALUES
+              (:legalName, :stageName, :mainUrl, :birthDate, :email, :phone, :address,
+               :docType, :rectoIdKey, :versoIdKey, :selfieKey, :now)
+            ON CONFLICT(email) DO UPDATE SET
+              legal_name   = excluded.legal_name,
+              stage_name   = excluded.stage_name,
+              main_url     = excluded.main_url,
+              birth_date   = excluded.birth_date,
+              phone        = excluded.phone,
+              address      = excluded.address,
+              doc_type     = excluded.doc_type,
+              recto_id_key = excluded.recto_id_key,
+              verso_id_key = excluded.verso_id_key,
+              selfie_key   = excluded.selfie_key,
+              updated_at   = excluded.updated_at`,
       args: {
-        shootId: p.shootId,
-        legalName: p.legalName.trim(),
-        stageName: p.stageName.trim(),
-        mainUrl: p.mainUrl.trim(),
-        category: p.category?.trim() || null,
-        birthDate: p.birthDate,
-        email: p.email.toLowerCase().trim(),
-        phone: p.phone?.trim() ?? null,
-        address: p.address.trim(),
-        signatureData: p.signatureData,
+        legalName:  p.legalName.trim(),
+        stageName:  p.stageName.trim(),
+        mainUrl:    p.mainUrl.trim(),
+        birthDate:  p.birthDate,
+        email,
+        phone:      p.phone?.trim() ?? null,
+        address:    p.address.trim(),
+        docType:    p.docType ?? null,
         rectoIdKey: p.rectoIdKey!,
         versoIdKey: p.versoIdKey!,
-        selfieKey: p.selfieKey!,
-        consentRecording: p.consentRecording ? 1 : 0,
+        selfieKey:  p.selfieKey!,
+        now,
+      },
+    });
+
+    // 2. Récupérer l'id du contact
+    const contactRow = await db.execute({
+      sql: "SELECT id FROM contacts WHERE email = ?",
+      args: [email],
+    });
+    const contactId = contactRow.rows[0].id as string;
+
+    // 3. Créer la participation
+    await db.execute({
+      sql: `INSERT INTO participations
+              (contact_id, shoot_id, category, signature_data,
+               consent_recording, consent_publication, consent_adult,
+               ip_address, user_agent)
+            VALUES
+              (:contactId, :shootId, :category, :signatureData,
+               :consentRecording, :consentPublication, :consentAdult,
+               :ipAddress, :userAgent)`,
+      args: {
+        contactId,
+        shootId:            p.shootId,
+        category:           p.category?.trim() || null,
+        signatureData:      p.signatureData,
+        consentRecording:   p.consentRecording ? 1 : 0,
         consentPublication: p.consentPublication ? 1 : 0,
-        consentAdult: p.consentAdult ? 1 : 0,
+        consentAdult:       p.consentAdult ? 1 : 0,
         ipAddress,
         userAgent,
       },
     });
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true, contactId }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    console.error("[consent/submit] DB insert error:", message);
+    console.error("[consent/submit] error:", message);
     return NextResponse.json({ error: "Internal server error", detail: message }, { status: 500 });
   }
 }

@@ -6,9 +6,9 @@ export async function GET() {
     const db = getDb();
     const result = await db.execute(`
       SELECT s.id, s.title, s.shoot_date, s.photographer, s.location, s.created_at,
-             COUNT(c.id) as contract_count
+             COUNT(p.id) as contract_count
       FROM shoots s
-      LEFT JOIN contracts c ON c.shoot_id = s.id
+      LEFT JOIN participations p ON p.shoot_id = s.id
       GROUP BY s.id
       ORDER BY s.created_at DESC
     `);

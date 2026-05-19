@@ -11,9 +11,9 @@ export default async function AdminPage() {
   const db = getDb();
   const result = await db.execute(`
     SELECT s.id, s.title, s.shoot_date, s.photographer, s.location, s.notes, s.created_at,
-           COUNT(c.id) as contract_count
+           COUNT(p.id) as contract_count
     FROM shoots s
-    LEFT JOIN contracts c ON c.shoot_id = s.id
+    LEFT JOIN participations p ON p.shoot_id = s.id
     GROUP BY s.id
     ORDER BY s.created_at DESC
   `);
@@ -25,8 +25,11 @@ export default async function AdminPage() {
     <div className="min-h-screen bg-muted/30">
       <header className="border-b bg-background px-6 py-4">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
-          <h1 className="text-xl font-bold">Shoots</h1>
+          <h1 className="text-xl font-bold">Admin</h1>
           <div className="flex gap-2">
+            <Link href="/admin/contacts">
+              <Button variant="outline" size="sm">Contacts</Button>
+            </Link>
             <Link href="/admin/shoots/new">
               <Button size="sm">+ Nouveau shoot</Button>
             </Link>

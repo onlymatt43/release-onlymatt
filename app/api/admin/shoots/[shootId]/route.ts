@@ -10,9 +10,12 @@ export async function GET(_req: NextRequest, { params }: Params) {
     const [shootResult, contractsResult] = await Promise.all([
       db.execute({ sql: "SELECT * FROM shoots WHERE id = ?", args: [shootId] }),
       db.execute({
-        sql: `SELECT id, full_name, email, phone, submitted_at,
-                     consent_recording, consent_publication, consent_adult
-              FROM contracts WHERE shoot_id = ? ORDER BY submitted_at DESC`,
+        sql: `SELECT p.id, p.category, p.consent_recording, p.consent_publication,
+                     p.consent_adult, p.signed_at,
+                     c.legal_name, c.stage_name, c.email
+              FROM participations p
+              JOIN contacts c ON c.id = p.contact_id
+              WHERE p.shoot_id = ? ORDER BY p.signed_at DESC`,
         args: [shootId],
       }),
     ]);
@@ -23,7 +26,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
     return NextResponse.json({
       shoot: shootResult.rows[0],
-      contracts: contractsResult.rows,
+      participations: contractsResult.rows,
     });
   } catch (err) {
     console.error("[admin/shoots/:id GET]", err);

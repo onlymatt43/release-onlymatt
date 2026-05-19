@@ -4,50 +4,49 @@
 
 -- Table des shoots (séances photo/vidéo)
 CREATE TABLE IF NOT EXISTS shoots (
-  id          TEXT    PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-  title       TEXT    NOT NULL,
-  shoot_date  TEXT    NOT NULL,          -- ISO-8601 : YYYY-MM-DD
-  photographer TEXT   NOT NULL,
-  location    TEXT,
-  notes       TEXT,
-  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+  id           TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  title        TEXT NOT NULL,
+  shoot_date   TEXT NOT NULL,            -- ISO-8601 : YYYY-MM-DD
+  photographer TEXT NOT NULL,
+  location     TEXT,
+  notes        TEXT,
+  created_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 
--- Table des contrats de consentement (un par co-performeur par shoot)
-CREATE TABLE IF NOT EXISTS contracts (
-  id               TEXT    PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
-  shoot_id         TEXT    NOT NULL REFERENCES shoots(id) ON DELETE CASCADE,
+-- Profils permanents des modèles (un seul par email)
+CREATE TABLE IF NOT EXISTS contacts (
+  id           TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  legal_name   TEXT NOT NULL,
+  stage_name   TEXT NOT NULL,
+  main_url     TEXT,
+  birth_date   TEXT NOT NULL,            -- ISO-8601 : YYYY-MM-DD
+  email        TEXT NOT NULL,
+  phone        TEXT,
+  address      TEXT NOT NULL,
+  doc_type     TEXT,                     -- passport | drivers_license | id_card
+  recto_id_key TEXT,                     -- clé R2 : contacts/{id}/recto.jpg
+  verso_id_key TEXT,                     -- clé R2 : contacts/{id}/verso.jpg
+  selfie_key   TEXT,                     -- clé R2 : contacts/{id}/selfie.jpg
+  created_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  updated_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+);
 
-  -- Identité du modèle
-  legal_name       TEXT    NOT NULL,     -- Nom officiel (pièce d'identité)
-  stage_name       TEXT,                 -- Nom d'artiste / Pseudo
-  birth_date       TEXT    NOT NULL,     -- ISO-8601 : YYYY-MM-DD
-  email            TEXT    NOT NULL,
-  phone            TEXT,
-  address          TEXT    NOT NULL,
+CREATE UNIQUE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
 
-  -- Tracé de la signature (data-URL base64 PNG stocké en texte)
-  signature_data   TEXT    NOT NULL,
-
-  -- Réseaux sociaux
-  main_url         TEXT,                 -- URL profil principal (X/Twitter)
-  category         TEXT,                 -- Tournage/catégorie libre (défaut: nom de scène)
-
-  -- Clés uniques des fichiers dans le bucket R2 (jamais les URLs complètes)
-  recto_id_key     TEXT    NOT NULL,     -- ex: contracts/{id}/recto.jpg
-  verso_id_key     TEXT    NOT NULL,     -- ex: contracts/{id}/verso.jpg
-  selfie_key       TEXT    NOT NULL,     -- ex: contracts/{id}/selfie.jpg
-
-  -- Consentements cochés
-  consent_recording   INTEGER NOT NULL DEFAULT 0 CHECK (consent_recording IN (0,1)),
+-- Participations : lien contact ↔ shoot + consentement signé
+CREATE TABLE IF NOT EXISTS participations (
+  id                  TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  contact_id          TEXT NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+  shoot_id            TEXT NOT NULL REFERENCES shoots(id)   ON DELETE CASCADE,
+  category            TEXT,                      -- étiquette libre (défaut: nom de scène)
+  signature_data      TEXT NOT NULL,
+  consent_recording   INTEGER NOT NULL DEFAULT 0 CHECK (consent_recording   IN (0,1)),
   consent_publication INTEGER NOT NULL DEFAULT 0 CHECK (consent_publication IN (0,1)),
-  consent_adult       INTEGER NOT NULL DEFAULT 0 CHECK (consent_adult IN (0,1)),
-
-  -- Métadonnées d'audit
-  ip_address       TEXT,
-  user_agent       TEXT,
-  signed_at        TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+  consent_adult       INTEGER NOT NULL DEFAULT 0 CHECK (consent_adult       IN (0,1)),
+  ip_address          TEXT,
+  user_agent          TEXT,
+  signed_at           TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 
-CREATE INDEX IF NOT EXISTS idx_contracts_shoot_id ON contracts(shoot_id);
-CREATE INDEX IF NOT EXISTS idx_contracts_email     ON contracts(email);
+CREATE INDEX IF NOT EXISTS idx_participations_contact ON participations(contact_id);
+CREATE INDEX IF NOT EXISTS idx_participations_shoot   ON participations(shoot_id);
