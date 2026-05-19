@@ -76,29 +76,48 @@ export default async function PrintParticipationPage({ params }: PageProps) {
 
   if (result.rows.length === 0) notFound();
 
-  const row = result.rows[0] as Record<string, unknown>;
+  const raw = result.rows[0] as Record<string, unknown>;
+
+  // Extract typed values once so JSX conditionals work without 'unknown' errors
+  const participationId  = raw.p_id as string;
+  const signatureData    = raw.signature_data as string | null;
+  const consentRecording = Boolean(raw.consent_recording);
+  const consentPub       = Boolean(raw.consent_publication);
+  const consentAdult     = Boolean(raw.consent_adult);
+  const ipAddress        = raw.ip_address as string | null;
+
+  const legalName   = raw.legal_name as string;
+  const stageName   = raw.stage_name as string;
+  const mainUrl     = raw.main_url as string | null;
+  const email       = raw.email as string;
+  const phone       = raw.phone as string | null;
+  const address     = raw.address as string;
+  const docType     = raw.doc_type as string | null;
+
+  const shootTitle    = raw.shoot_title as string;
+  const photographer  = raw.photographer as string;
+  const shootLocation = raw.shoot_location as string | null;
+  const shootCategory = raw.shoot_category as string | null;
 
   const [rectoUrl, versoUrl, selfieUrl] = await Promise.all([
-    presign(row.recto_id_key as string | null),
-    presign(row.verso_id_key as string | null),
-    presign(row.selfie_key as string | null),
+    presign(raw.recto_id_key as string | null),
+    presign(raw.verso_id_key as string | null),
+    presign(raw.selfie_key as string | null),
   ]);
 
-  const signedAt = row.signed_at
-    ? new Date(row.signed_at as string).toLocaleString("fr-CA", { timeZone: "America/Toronto" })
+  const signedAt = raw.signed_at
+    ? new Date(raw.signed_at as string).toLocaleString("fr-CA", { timeZone: "America/Toronto" })
     : "—";
 
-  const birthDate = row.birth_date
-    ? new Date(row.birth_date as string).toLocaleDateString("fr-CA")
+  const birthDate = raw.birth_date
+    ? new Date(raw.birth_date as string).toLocaleDateString("fr-CA")
     : "—";
 
-  const shootDate = row.shoot_date
-    ? new Date(row.shoot_date as string).toLocaleDateString("fr-CA")
+  const shootDate = raw.shoot_date
+    ? new Date(raw.shoot_date as string).toLocaleDateString("fr-CA")
     : "—";
 
-  const docLabel = row.doc_type
-    ? (DOC_LABELS[row.doc_type as string] ?? (row.doc_type as string))
-    : "Non spécifié";
+  const docLabel = docType ? (DOC_LABELS[docType] ?? docType) : "Non spécifié";
 
   return (
     <>
@@ -172,14 +191,14 @@ export default async function PrintParticipationPage({ params }: PageProps) {
         <div className="section">
           <div className="section-title">Shooting</div>
           <div className="grid2">
-            <div className="field"><label>Titre</label><span>{row.shoot_title as string}</span></div>
+            <div className="field"><label>Titre</label><span>{shootTitle}</span></div>
             <div className="field"><label>Date</label><span>{shootDate}</span></div>
-            <div className="field"><label>Photographe</label><span>{row.photographer as string}</span></div>
-            {row.shoot_location && (
-              <div className="field"><label>Lieu</label><span>{row.shoot_location as string}</span></div>
+            <div className="field"><label>Photographe</label><span>{photographer}</span></div>
+            {shootLocation && (
+              <div className="field"><label>Lieu</label><span>{shootLocation}</span></div>
             )}
-            {row.shoot_category && (
-              <div className="field"><label>Catégorie</label><span>{row.shoot_category as string}</span></div>
+            {shootCategory && (
+              <div className="field"><label>Catégorie</label><span>{shootCategory}</span></div>
             )}
           </div>
         </div>
@@ -188,19 +207,19 @@ export default async function PrintParticipationPage({ params }: PageProps) {
         <div className="section">
           <div className="section-title">Modèle</div>
           <div className="grid2">
-            <div className="field"><label>Nom légal</label><span>{row.legal_name as string}</span></div>
-            <div className="field"><label>Nom de scène</label><span>{row.stage_name as string}</span></div>
+            <div className="field"><label>Nom légal</label><span>{legalName}</span></div>
+            <div className="field"><label>Nom de scène</label><span>{stageName}</span></div>
             <div className="field"><label>Date de naissance</label><span>{birthDate}</span></div>
-            <div className="field"><label>Email</label><span>{row.email as string}</span></div>
-            {row.phone && <div className="field"><label>Téléphone</label><span>{row.phone as string}</span></div>}
+            <div className="field"><label>Email</label><span>{email}</span></div>
+            {phone && <div className="field"><label>Téléphone</label><span>{phone}</span></div>}
             <div className="field" style={{ gridColumn: "1 / -1" }}>
               <label>Adresse</label>
-              <span>{row.address as string}</span>
+              <span>{address}</span>
             </div>
-            {row.main_url && (
+            {mainUrl && (
               <div className="field" style={{ gridColumn: "1 / -1" }}>
                 <label>Profil principal</label>
-                <span>{row.main_url as string}</span>
+                <span>{mainUrl}</span>
               </div>
             )}
           </div>
@@ -210,15 +229,15 @@ export default async function PrintParticipationPage({ params }: PageProps) {
         <div className="section">
           <div className="section-title">Consentements</div>
           <div className="consent-item">
-            <Check ok={Boolean(row.consent_recording)} />
+            <Check ok={consentRecording} />
             <span>Consentement à l&apos;enregistrement audio et vidéo</span>
           </div>
           <div className="consent-item">
-            <Check ok={Boolean(row.consent_publication)} />
+            <Check ok={consentPub} />
             <span>Consentement à la publication et distribution du contenu</span>
           </div>
           <div className="consent-item">
-            <Check ok={Boolean(row.consent_adult)} />
+            <Check ok={consentAdult} />
             <span>Je déclare être majeur(e) et consentir librement à cette séance</span>
           </div>
         </div>
@@ -226,19 +245,19 @@ export default async function PrintParticipationPage({ params }: PageProps) {
         {/* Signature */}
         <div className="section">
           <div className="section-title">Signature électronique</div>
-          {row.signature_data ? (
+          {signatureData ? (
             <div className="sig-box">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={row.signature_data as string} alt="Signature" />
+              <img src={signatureData} alt="Signature" />
             </div>
           ) : (
             <p style={{ color: "#999" }}>Signature non disponible</p>
           )}
           <div style={{ marginTop: 10, fontSize: 12, color: "#555" }}>
             <strong>Signé le :</strong> {signedAt}
-            {row.ip_address && (
+            {ipAddress && (
               <span style={{ marginLeft: 24 }}>
-                <strong>IP :</strong> {row.ip_address as string}
+                <strong>IP :</strong> {ipAddress}
               </span>
             )}
           </div>
@@ -278,7 +297,7 @@ export default async function PrintParticipationPage({ params }: PageProps) {
 
         {/* Pied de page */}
         <div className="footer">
-          <span>Ref. participation: {row.p_id as string}</span>
+          <span>Ref. participation: {participationId}</span>
           <span>Document généré le {new Date().toLocaleDateString("fr-CA")}</span>
         </div>
       </div>
