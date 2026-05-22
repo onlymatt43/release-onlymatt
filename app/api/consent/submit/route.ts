@@ -152,6 +152,18 @@ export async function POST(req: NextRequest) {
     });
     const participationId = partResult.rows[0].id as string;
 
+    // Notify onlycard: mark creator consentStatus as 'signed'
+    // shootId === Twitter username when coming from /consent/[username]
+    try {
+      await fetch(`https://me.onlymatt.ca/api/creators/${encodeURIComponent(p.shootId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ consentStatus: "signed", consentSignedAt: now }),
+      });
+    } catch {
+      // Non-blocking — consent is saved in DB regardless
+    }
+
     return NextResponse.json({ success: true, contactId, participationId }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
