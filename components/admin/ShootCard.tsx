@@ -31,15 +31,15 @@ export default function ShootCard({ shoot, baseUrl }: ShootCardProps) {
   }, [consentUrl]);
 
   return (
-    <Card className="flex flex-col gap-0">
-      <CardHeader className="pb-2">
+    <Card className="flex flex-col gap-0 border border-slate-700/50 bg-white/[0.03] backdrop-blur-sm rounded-2xl">
+      <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-base leading-tight">{shoot.title}</CardTitle>
-          <Badge variant="secondary" className="shrink-0">
+          <CardTitle className="text-base leading-tight text-slate-100">{shoot.title}</CardTitle>
+          <Badge variant="secondary" className="shrink-0 bg-emerald-500/20 text-emerald-300 border-emerald-500/20 text-xs">
             {shoot.contract_count ?? 0} contract{(shoot.contract_count ?? 0) !== 1 ? "s" : ""}
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-slate-400">
           {new Date(shoot.shoot_date).toLocaleDateString("fr-CA")} · {shoot.photographer}
           {shoot.location ? ` · ${shoot.location}` : ""}
         </p>
@@ -47,28 +47,28 @@ export default function ShootCard({ shoot, baseUrl }: ShootCardProps) {
 
       <CardContent className="flex flex-wrap gap-2 pt-0">
         <Link href={`/admin/shoots/${shoot.id}`}>
-          <Button variant="outline" size="sm">View contracts</Button>
+          <Button variant="outline" size="sm" className="border-slate-700/60 bg-black/40 hover:bg-black/60 text-slate-200 text-xs rounded-lg">View contracts</Button>
         </Link>
 
-        <Button variant="outline" size="sm" onClick={handleCopy}>
+        <Button variant="outline" size="sm" onClick={handleCopy} className="border-slate-700/60 bg-black/40 hover:bg-black/60 text-slate-200 text-xs rounded-lg">
           {copied ? "✓ Copied!" : "Copy link"}
         </Button>
 
         <Dialog>
           <DialogTrigger>
-            <Button variant="outline" size="sm" type="button">QR Code</Button>
+            <Button variant="outline" size="sm" type="button" className="border-slate-700/60 bg-black/40 hover:bg-black/60 text-slate-200 text-xs rounded-lg">QR Code</Button>
           </DialogTrigger>
-          <DialogContent className="flex flex-col items-center gap-4">
+          <DialogContent className="flex flex-col items-center gap-4 border border-slate-700/50 bg-black/95 backdrop-blur-sm rounded-2xl">
             <DialogHeader>
-              <DialogTitle>{shoot.title}</DialogTitle>
+              <DialogTitle className="text-slate-100">{shoot.title}</DialogTitle>
             </DialogHeader>
-            <div className="rounded-lg border bg-white p-4">
+            <div className="rounded-xl border border-slate-700/40 bg-white p-4">
               <QRCode value={consentUrl} size={220} />
             </div>
-            <p className="break-all text-center text-xs text-muted-foreground">
+            <p className="break-all text-center text-xs text-slate-400">
               {consentUrl}
             </p>
-            <Button variant="outline" size="sm" onClick={handleCopy}>
+            <Button variant="outline" size="sm" onClick={handleCopy} className="border-slate-700/60 bg-black/40 hover:bg-black/60 text-slate-200 text-xs rounded-lg">
               {copied ? "✓ Copied!" : "Copy link"}
             </Button>
           </DialogContent>
