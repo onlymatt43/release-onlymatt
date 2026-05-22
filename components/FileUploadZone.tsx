@@ -110,7 +110,7 @@ export default function FileUploadZone({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <Label htmlFor={id}>{label}</Label>
+        <Label htmlFor={id} className="text-slate-200 font-medium">{label}</Label>
         {statusBadge[status]}
       </div>
 
@@ -121,19 +121,19 @@ export default function FileUploadZone({
         accept="image/*"
         disabled={status === "compressing" || status === "uploading"}
         onChange={handleChange}
-        className="cursor-pointer"
+        className="cursor-pointer text-slate-200 file:text-slate-200"
       />
 
       {preview && (
         <img
           src={preview}
           alt={`Preview – ${label}`}
-          className="mt-1 h-28 w-auto rounded-md border object-cover"
+          className="mt-1 h-28 w-auto rounded-md border border-slate-700/40 object-cover"
         />
       )}
 
       {error && (
-        <p className="text-sm text-destructive">{error}</p>
+        <p className="text-sm text-red-400 bg-red-400/10 px-2 py-1 rounded border border-red-400/20">{error}</p>
       )}
     </div>
   );

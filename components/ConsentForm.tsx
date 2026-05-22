@@ -186,12 +186,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
             {/* ── Identité ── */}
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 Identity
               </h2>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-legal`}>Legal name (ID document) *</Label>
+                <Label htmlFor={`${uid}-legal`} className="text-slate-200 font-medium">Legal name (ID document) *</Label>
                 <Input
                   id={`${uid}-legal`}
                   type="text"
@@ -200,11 +200,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   value={form.legalName}
                   onChange={(e) => set("legalName", e.target.value)}
                   required
+                  className="bg-black/40 border-slate-700/60 text-slate-100 placeholder:text-slate-500 rounded-xl focus-visible:border-emerald-500/40 focus-visible:ring-emerald-500/40"
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-stage`}>Stage name / Alias *</Label>
+                <Label htmlFor={`${uid}-stage`} className="text-slate-200 font-medium">Stage name / Alias *</Label>
                 <Input
                   id={`${uid}-stage`}
                   type="text"
@@ -212,11 +213,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   value={form.stageName}
                   onChange={(e) => set("stageName", e.target.value)}
                   required
+                  className="bg-black/40 border-slate-700/60 text-slate-100 placeholder:text-slate-500 rounded-xl focus-visible:border-emerald-500/40 focus-visible:ring-emerald-500/40"
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-mainurl`}>Main X / Twitter profile *</Label>
+                <Label htmlFor={`${uid}-mainurl`} className="text-slate-200 font-medium">Main X / Twitter profile *</Label>
                 <Input
                   id={`${uid}-mainurl`}
                   type="url"
@@ -224,20 +226,21 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   value={form.mainUrl}
                   onChange={(e) => set("mainUrl", e.target.value)}
                   required
+                  className="bg-black/40 border-slate-700/60 text-slate-100 placeholder:text-slate-500 rounded-xl focus-visible:border-emerald-500/40 focus-visible:ring-emerald-500/40"
                 />
               </div>
 
               {shootCategory && (
                 <div className="flex flex-col gap-1">
-                  <Label>Shoot name / Category</Label>
-                  <div className="flex h-9 items-center rounded-md border border-input bg-muted px-3 py-1 text-sm text-muted-foreground">
+                  <Label className="text-slate-200 font-medium">Shoot name / Category</Label>
+                  <div className="flex h-9 items-center rounded-md border border-slate-700/40 bg-black/30 px-3 py-1 text-sm text-slate-200">
                     {shootCategory}
                   </div>
                 </div>
               )}
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-dob`}>Date of birth *</Label>
+                <Label htmlFor={`${uid}-dob`} className="text-slate-200 font-medium">Date of birth *</Label>
                 <Input
                   id={`${uid}-dob`}
                   type="date"
@@ -246,11 +249,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   value={form.birthDate}
                   onChange={(e) => set("birthDate", e.target.value)}
                   required
+                  className="bg-black/40 border-slate-700/60 text-slate-100 rounded-xl focus-visible:border-emerald-500/40 focus-visible:ring-emerald-500/40"
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-email`}>Email *</Label>
+                <Label htmlFor={`${uid}-email`} className="text-slate-200 font-medium">Email *</Label>
                 <Input
                   id={`${uid}-email`}
                   type="email"
@@ -259,11 +263,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   value={form.email}
                   onChange={(e) => set("email", e.target.value)}
                   required
+                  className="bg-black/40 border-slate-700/60 text-slate-100 placeholder:text-slate-500 rounded-xl focus-visible:border-emerald-500/40 focus-visible:ring-emerald-500/40"
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-phone`}>Phone</Label>
+                <Label htmlFor={`${uid}-phone`} className="text-slate-200 font-medium">Phone</Label>
                 <Input
                   id={`${uid}-phone`}
                   type="tel"
@@ -271,11 +276,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   placeholder="+1 514 xxx xxxx"
                   value={form.phone}
                   onChange={(e) => set("phone", e.target.value)}
+                  className="bg-black/40 border-slate-700/60 text-slate-100 placeholder:text-slate-500 rounded-xl focus-visible:border-emerald-500/40 focus-visible:ring-emerald-500/40"
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-address`}>Address *</Label>
+                <Label htmlFor={`${uid}-address`} className="text-slate-200 font-medium">Address *</Label>
                 <AddressAutocomplete
                   id={`${uid}-address`}
                   value={form.address}
@@ -288,23 +294,23 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
             {/* ── Pièce d'identité ── */}
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 ID Document
               </h2>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-doctype`}>Document type *</Label>
+                <Label htmlFor={`${uid}-doctype`} className="text-slate-200 font-medium">Document type *</Label>
                 <select
                   id={`${uid}-doctype`}
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  className="flex h-9 w-full rounded-md border border-input bg-black/40 text-slate-100 px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500"
                   value={docType}
                   onChange={(e) => setDocType(e.target.value)}
                   required
                 >
-                  <option value="">Choose…</option>
-                  <option value="passport">Passport</option>
-                  <option value="drivers_license">Driver's license</option>
-                  <option value="id_card">ID card</option>
+                  <option value="" className="bg-slate-900">Choose…</option>
+                  <option value="passport" className="bg-slate-900">Passport</option>
+                  <option value="drivers_license" className="bg-slate-900">Driver's license</option>
+                  <option value="id_card" className="bg-slate-900">ID card</option>
                 </select>
               </div>
 
@@ -330,11 +336,11 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
             {/* ── Signature ── */}
             <section className="flex flex-col gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 Signature *
               </h2>
 
-              <div className="h-32 overflow-y-scroll rounded-md border border-input bg-muted/30 px-3 py-2 text-xs text-muted-foreground leading-relaxed">
+              <div className="h-32 overflow-y-scroll rounded-md border border-slate-700/40 bg-black/30 px-3 py-2 text-xs text-slate-300 leading-relaxed">
                 <p className="font-semibold mb-1">Image Rights Assignment Contract and Informed Consent</p>
                 <p>By signing this form, the undersigned (hereinafter "the Model") irrevocably authorizes the photographer/producer (hereinafter "the Producer") and their successors, assignees, and licensees to use, reproduce, modify, distribute, publish, and license the photographic and audiovisual works created during the session covered by this document.</p>
                 <p className="mt-2">This authorization specifically includes commercial exploitation and distribution on any digital content platform, social networks, or adult platforms (including but not limited to OnlyFans, Fansly, Faphouse) as well as any other digital or physical medium, present or future, without geographical or temporal restriction. The Model acknowledges that this assignment is granted definitively and does not entitle them to any subsequent compensation, royalties, or approval rights over the use of the material.</p>
@@ -357,7 +363,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
             {/* ── Consentements ── */}
             <section className="flex flex-col gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 Consents *
               </h2>
 
@@ -380,12 +386,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                 <label key={key} className="flex items-start gap-2 text-sm cursor-pointer">
                   <input
                     type="checkbox"
-                    className="mt-0.5 h-4 w-4 rounded border-input accent-primary"
+                    className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-black/40 accent-emerald-500"
                     checked={form[key]}
                     onChange={(e) => set(key, e.target.checked)}
                     required
                   />
-                  <span>{label}</span>
+                  <span className="text-slate-200">{label}</span>
                 </label>
               ))}
             </section>
