@@ -29,7 +29,7 @@ export default function LoginForm({ from }: { from?: string }) {
       router.refresh();
     } else {
       const data = await res.json();
-      setError(data.error ?? "Erreur");
+      setError(data.error ?? "Error");
     }
     setLoading(false);
   }, [password, from, router]);
@@ -43,7 +43,7 @@ export default function LoginForm({ from }: { from?: string }) {
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -55,7 +55,7 @@ export default function LoginForm({ from }: { from?: string }) {
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Button type="submit" disabled={loading}>
-              {loading ? "Connexion…" : "Se connecter"}
+              {loading ? "Logging in…" : "Log in"}
             </Button>
           </form>
         </CardContent>

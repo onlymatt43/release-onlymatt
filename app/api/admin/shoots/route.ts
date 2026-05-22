@@ -15,7 +15,7 @@ export async function GET() {
     return NextResponse.json({ shoots: result.rows });
   } catch (err) {
     console.error("[admin/shoots GET]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
@@ -28,10 +28,10 @@ export async function POST(req: NextRequest) {
   const { title, shootDate, location, category, notes } = body as Record<string, unknown>;
 
   if (typeof title !== "string" || !title.trim()) {
-    return NextResponse.json({ error: "title requis" }, { status: 422 });
+    return NextResponse.json({ error: "title required" }, { status: 422 });
   }
   if (typeof shootDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(shootDate)) {
-    return NextResponse.json({ error: "shootDate invalide (YYYY-MM-DD)" }, { status: 422 });
+    return NextResponse.json({ error: "invalid shootDate (YYYY-MM-DD)" }, { status: 422 });
   }
 
   try {
@@ -53,6 +53,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ id }, { status: 201 });
   } catch (err) {
     console.error("[admin/shoots POST]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

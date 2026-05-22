@@ -60,12 +60,12 @@ export default async function ShootDetailPage({ params }: PageProps) {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-lg border bg-background p-4 space-y-1">
             <p className="text-sm text-muted-foreground">Date</p>
-            <p className="font-medium">{new Date(shoot.shoot_date).toLocaleDateString("fr-CA")}</p>
-            <p className="text-sm text-muted-foreground mt-2">Photographe</p>
+            <p className="font-medium">{new Date(shoot.shoot_date).toLocaleDateString("en-CA")}</p>
+            <p className="text-sm text-muted-foreground mt-2">Photographer</p>
             <p className="font-medium">{shoot.photographer}</p>
             {shoot.location && (
               <>
-                <p className="text-sm text-muted-foreground mt-2">Lieu</p>
+                <p className="text-sm text-muted-foreground mt-2">Location</p>
                 <p className="font-medium">{shoot.location}</p>
               </>
             )}
@@ -83,24 +83,24 @@ export default async function ShootDetailPage({ params }: PageProps) {
         <div className="rounded-lg border bg-background">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <h2 className="font-semibold">
-              Participations{" "}
+              Participants{" "}
               <span className="text-muted-foreground font-normal">({participations.length})</span>
             </h2>
           </div>
 
           {participations.length === 0 ? (
             <p className="p-6 text-center text-sm text-muted-foreground">
-              Aucune participation pour ce shoot.
+              No participants for this shoot.
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Modèle</TableHead>
+                  <TableHead>Model</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Catégorie</TableHead>
-                  <TableHead>Signé le</TableHead>
-                  <TableHead>Consentements</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Signed on</TableHead>
+                  <TableHead>Consents</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -114,13 +114,13 @@ export default async function ShootDetailPage({ params }: PageProps) {
                     <TableCell className="text-muted-foreground text-sm">{p.email}</TableCell>
                     <TableCell className="text-sm text-muted-foreground">{p.category ?? p.stage_name}</TableCell>
                     <TableCell className="text-sm">
-                      {new Date(p.signed_at).toLocaleString("fr-CA")}
+                      {new Date(p.signed_at).toLocaleString("en-CA")}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1 flex-wrap">
-                        {p.consent_recording  ? <Badge className="bg-green-600 text-white text-xs">Enreg.</Badge>  : null}
-                        {p.consent_publication ? <Badge className="bg-green-600 text-white text-xs">Publi.</Badge>  : null}
-                        {p.consent_adult       ? <Badge className="bg-green-600 text-white text-xs">Majeur</Badge> : null}
+                        {p.consent_recording  ? <Badge className="bg-green-600 text-white text-xs">Rec.</Badge>  : null}
+                        {p.consent_publication ? <Badge className="bg-green-600 text-white text-xs">Pub.</Badge>  : null}
+                        {p.consent_adult       ? <Badge className="bg-green-600 text-white text-xs">Adult</Badge> : null}
                       </div>
                     </TableCell>
                     <TableCell>

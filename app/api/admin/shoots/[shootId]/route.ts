@@ -21,7 +21,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     ]);
 
     if (shootResult.rows.length === 0) {
-      return NextResponse.json({ error: "Shoot introuvable" }, { status: 404 });
+      return NextResponse.json({ error: "Shoot not found" }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -30,7 +30,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     });
   } catch (err) {
     console.error("[admin/shoots/:id GET]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
@@ -42,6 +42,6 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[admin/shoots/:id DELETE]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

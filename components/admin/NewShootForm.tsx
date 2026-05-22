@@ -37,7 +37,7 @@ export default function NewShootForm() {
 
     const data = await res.json();
     if (!res.ok) {
-      setError(data.error ?? "Erreur");
+      setError(data.error ?? "Error");
       setLoading(false);
       return;
     }
@@ -50,38 +50,38 @@ export default function NewShootForm() {
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-lg">
         <CardHeader>
-          <CardTitle>Nouveau shoot</CardTitle>
+          <CardTitle>New shoot</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <Label htmlFor="title">Titre *</Label>
+              <Label htmlFor="title">Title *</Label>
               <Input id="title" value={form.title} onChange={(e) => set("title", e.target.value)}
-                placeholder="ex. Shoot mai 2026 – Studio Paris" required />
+                placeholder="e.g. May 2026 Shoot – Paris Studio" required />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="shootDate">Date du shoot *</Label>
+              <Label htmlFor="shootDate">Shoot date *</Label>
               <Input id="shootDate" type="date" value={form.shootDate}
                 onChange={(e) => set("shootDate", e.target.value)} required />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="location">Lieu (optionnel)</Label>
+              <Label htmlFor="location">Location (optional)</Label>
               <Input id="location" value={form.location}
                 onChange={(e) => set("location", e.target.value)}
-                placeholder="Studio, ville…" />
+                placeholder="Studio, city…" />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="category">Catégorie / Type de contenu (optionnel)</Label>
+              <Label htmlFor="category">Category / Content type (optional)</Label>
               <Input id="category" value={form.category}
                 onChange={(e) => set("category", e.target.value)}
-                placeholder="ex: OnlyFans, Promo, Adulte…" />
+                placeholder="e.g. OnlyFans, Promo, Adult…" />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="notes">Notes (optionnel)</Label>
+              <Label htmlFor="notes">Notes (optional)</Label>
               <Input id="notes" value={form.notes}
                 onChange={(e) => set("notes", e.target.value)} />
             </div>
@@ -91,10 +91,10 @@ export default function NewShootForm() {
             <div className="flex gap-2">
               <Button type="button" variant="outline" onClick={() => router.back()}
                 disabled={loading}>
-                Annuler
+                Cancel
               </Button>
               <Button type="submit" disabled={loading} className="flex-1">
-                {loading ? "Création…" : "Créer le shoot"}
+                {loading ? "Creating…" : "Create shoot"}
               </Button>
             </div>
           </form>

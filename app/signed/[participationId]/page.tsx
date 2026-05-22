@@ -25,9 +25,9 @@ async function presign(key: string | null): Promise<string | null> {
 }
 
 const DOC_LABELS: Record<string, string> = {
-  passport: "Passeport",
-  drivers_license: "Permis de conduire",
-  id_card: "Carte d'identité",
+  passport: "Passport",
+  drivers_license: "Driver's license",
+  id_card: "ID card",
 };
 
 function Check({ ok }: { ok: boolean }) {
@@ -95,7 +95,7 @@ export default async function SignedPage({ params }: PageProps) {
     ? new Date(raw.birth_date as string).toLocaleDateString("fr-CA")
     : "—";
 
-  const docLabel = docType ? (DOC_LABELS[docType] ?? docType) : "Non spécifié";
+  const docLabel = docType ? (DOC_LABELS[docType] ?? docType) : "Not specified";
 
   return (
     <>
@@ -127,77 +127,77 @@ export default async function SignedPage({ params }: PageProps) {
 
       <div className="container">
         <div className="header">
-          <div className="logo">OnlyMatt — Formulaire de consentement</div>
-          <div className="title">Release de modèle / Model Release</div>
+          <div className="logo">OnlyMatt — Consent Form</div>
+          <div className="title">Model Release</div>
         </div>
 
         <div className="section">
-          <div className="section-title">Contexte</div>
+          <div className="section-title">Context</div>
           <div className="grid2">
-            <div className="field"><label>Titre</label><span>{shootTitle}</span></div>
-            {shootLocation && <div className="field"><label>Lieu</label><span>{shootLocation}</span></div>}
-            {shootCategory && <div className="field"><label>Catégorie</label><span>{shootCategory}</span></div>}
+            <div className="field"><label>Title</label><span>{shootTitle}</span></div>
+            {shootLocation && <div className="field"><label>Location</label><span>{shootLocation}</span></div>}
+            {shootCategory && <div className="field"><label>Category</label><span>{shootCategory}</span></div>}
           </div>
         </div>
 
         <div className="section">
-          <div className="section-title">Modèle</div>
+          <div className="section-title">Model</div>
           <div className="grid2">
-            <div className="field"><label>Nom légal</label><span>{legalName}</span></div>
-            <div className="field"><label>Nom de scène</label><span>{stageName}</span></div>
-            <div className="field"><label>Date de naissance</label><span>{birthDate}</span></div>
+            <div className="field"><label>Legal name</label><span>{legalName}</span></div>
+            <div className="field"><label>Stage name</label><span>{stageName}</span></div>
+            <div className="field"><label>Date of birth</label><span>{birthDate}</span></div>
             <div className="field"><label>Email</label><span>{email}</span></div>
-            {phone && <div className="field"><label>Téléphone</label><span>{phone}</span></div>}
-            <div className="field" style={{ gridColumn: "1 / -1" }}><label>Adresse</label><span>{address}</span></div>
-            {mainUrl && <div className="field" style={{ gridColumn: "1 / -1" }}><label>Profil principal</label><span>{mainUrl}</span></div>}
+            {phone && <div className="field"><label>Phone</label><span>{phone}</span></div>}
+            <div className="field" style={{ gridColumn: "1 / -1" }}><label>Address</label><span>{address}</span></div>
+            {mainUrl && <div className="field" style={{ gridColumn: "1 / -1" }}><label>Main profile</label><span>{mainUrl}</span></div>}
           </div>
         </div>
 
         <div className="section">
-          <div className="section-title">Contrat de cession de droits à l&apos;image et consentement éclairé</div>
+          <div className="section-title">Image Rights Assignment Contract and Informed Consent</div>
           <div style={{ fontSize: 11, color: "#333", lineHeight: 1.6 }}>
-            <p>En signant ce formulaire, le/la soussigné(e) (ci-après « le Modèle ») autorise irrévocablement le photographe/producteur (ci-après « le Producteur ») et ses ayants droit, cessionnaires et licenciés à utiliser, reproduire, modifier, distribuer, publier et concéder sous licence les œuvres photographiques et audiovisuelles réalisées lors de la séance visée par le présent document.</p>
-            <p style={{ marginTop: 8 }}>Cette autorisation porte notamment sur l&apos;exploitation commerciale et la diffusion sur toute plateforme de contenu numérique, de réseaux sociaux ou de plateformes pour adultes (incluant sans s&apos;y limiter OnlyFans, Fansly, Faphouse) ainsi que sur tout autre support numérique ou physique, présent ou futur, sans restriction géographique ni temporelle.</p>
-            <p style={{ marginTop: 8, fontWeight: 600 }}>Le Modèle certifie sous peine de parjure :</p>
+            <p>By signing this form, the undersigned (hereinafter "the Model") irrevocably authorizes the photographer/producer (hereinafter "the Producer") and their successors, assignees, and licensees to use, reproduce, modify, distribute, publish, and license the photographic and audiovisual works created during the session covered by this document.</p>
+            <p style={{ marginTop: 8 }}>This authorization specifically includes commercial exploitation and distribution on any digital content platform, social networks, or adult platforms (including but not limited to OnlyFans, Fansly, Faphouse) as well as any other digital or physical medium, present or future, without geographical or temporal restriction.</p>
+            <p style={{ marginTop: 8, fontWeight: 600 }}>The Model certifies under penalty of perjury that:</p>
             <ul style={{ marginTop: 4, paddingLeft: 20, lineHeight: 1.7 }}>
-              <li>Être âgé(e) d&apos;au moins 18 ans à la date de la séance et avoir la pleine capacité juridique.</li>
-              <li>Que les pièces d&apos;identité fournies sont authentiques, valides et le/la représentent fidèlement.</li>
-              <li>Agir librement, de manière éclairée, sans contrainte ni état altéré.</li>
-              <li>Avoir lu, compris et accepté l&apos;intégralité du présent contrat avant d&apos;apposer sa signature électronique.</li>
+              <li>They are at least 18 years of age at the date of the session and have full legal capacity.</li>
+              <li>The identification documents provided are authentic, valid, and accurately represent them.</li>
+              <li>They are acting freely, in an informed manner, without constraint or impairment.</li>
+              <li>They have read, understood, and accepted this contract in its entirety before affixing their electronic signature.</li>
             </ul>
           </div>
         </div>
 
         <div className="section">
-          <div className="section-title">Consentements</div>
-          <div className="consent-item"><Check ok={consentRecording} /><span>J&apos;autorise l&apos;enregistrement de ma participation.</span></div>
-          <div className="consent-item"><Check ok={consentPub} /><span>J&apos;autorise la publication du contenu sur les plateformes prévues (OnlyFans, Faphouse, Fansly, etc.).</span></div>
-          <div className="consent-item"><Check ok={consentAdult} /><span>Je certifie être majeur(e) (18+) et consentir librement et sans contrainte.</span></div>
+          <div className="section-title">Consents</div>
+          <div className="consent-item"><Check ok={consentRecording} /><span>I authorize the recording of my participation.</span></div>
+          <div className="consent-item"><Check ok={consentPub} /><span>I authorize the publication of content on the specified platforms (OnlyFans, Faphouse, Fansly, etc.).</span></div>
+          <div className="consent-item"><Check ok={consentAdult} /><span>I certify that I am of legal age (18+) and consent freely and without constraint.</span></div>
         </div>
 
         <div className="section">
-          <div className="section-title">Signature électronique</div>
+          <div className="section-title">Electronic signature</div>
           {signatureData ? (
             <div className="sig-box">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={signatureData} alt="Signature" />
             </div>
           ) : (
-            <p style={{ color: "#999" }}>Signature non disponible</p>
+            <p style={{ color: "#999" }}>Signature not available</p>
           )}
           <div style={{ marginTop: 10, fontSize: 12, color: "#555" }}>
-            <strong>Signé le :</strong> {signedAt}
-            {ipAddress && <span style={{ marginLeft: 24 }}><strong>IP :</strong> {ipAddress}</span>}
+            <strong>Signed on:</strong> {signedAt}
+            {ipAddress && <span style={{ marginLeft: 24 }}><strong>IP:</strong> {ipAddress}</span>}
           </div>
         </div>
 
         {(rectoUrl || versoUrl || selfieUrl) && (
           <div className="section">
-            <div className="section-title">Pièces d&apos;identité — {docLabel}</div>
+            <div className="section-title">ID Documents — {docLabel}</div>
             <div className="photos">
-              {rectoUrl && <div className="photo-item"><label>Recto</label>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={rectoUrl} alt="ID recto" /></div>}
-              {versoUrl && <div className="photo-item"><label>Verso</label>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={versoUrl} alt="ID verso" /></div>}
-              {selfieUrl && <div className="photo-item"><label>Selfie avec pièce</label>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={selfieUrl} alt="Selfie" /></div>}
+              {rectoUrl && <div className="photo-item"><label>Front</label>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={rectoUrl} alt="ID front" /></div>}
+              {versoUrl && <div className="photo-item"><label>Back</label>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={versoUrl} alt="ID back" /></div>}
+              {selfieUrl && <div className="photo-item"><label>Selfie with ID</label>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={selfieUrl} alt="Selfie" /></div>}
             </div>
           </div>
         )}

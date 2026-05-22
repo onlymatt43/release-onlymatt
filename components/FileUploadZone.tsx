@@ -51,7 +51,7 @@ export default function FileUploadZone({
         compressed = await imageCompression(file, COMPRESSION_OPTIONS);
       } catch {
         setStatus("error");
-        setError("Erreur lors de la compression de l'image.");
+        setError("Error compressing image.");
         return;
       }
 
@@ -73,7 +73,7 @@ export default function FileUploadZone({
         presignedUrl = data.url;
       } catch (err) {
         setStatus("error");
-        setError("Impossible d'obtenir l'URL de téléversement. Réessayez.");
+        setError("Unable to obtain upload URL. Please try again.");
         console.error(err);
         return;
       }
@@ -88,7 +88,7 @@ export default function FileUploadZone({
         if (!upload.ok) throw new Error(`R2 PUT: ${upload.status}`);
       } catch (err) {
         setStatus("error");
-        setError("Erreur lors du téléversement. Vérifiez votre connexion.");
+        setError("Upload error. Check your connection.");
         console.error(err);
         return;
       }
@@ -100,11 +100,11 @@ export default function FileUploadZone({
   );
 
   const statusBadge: Record<UploadStatus, ReactElement> = {
-    idle:        <Badge variant="secondary">En attente</Badge>,
-    compressing: <Badge variant="secondary">Compression…</Badge>,
-    uploading:   <Badge variant="secondary">Envoi…</Badge>,
-    done:        <Badge className="bg-green-600 text-white">✓ Téléversé</Badge>,
-    error:       <Badge variant="destructive">Erreur</Badge>,
+    idle:        <Badge variant="secondary">Pending</Badge>,
+    compressing: <Badge variant="secondary">Compressing…</Badge>,
+    uploading:   <Badge variant="secondary">Uploading…</Badge>,
+    done:        <Badge className="bg-green-600 text-white">✓ Uploaded</Badge>,
+    error:       <Badge variant="destructive">Error</Badge>,
   };
 
   return (
@@ -127,7 +127,7 @@ export default function FileUploadZone({
       {preview && (
         <img
           src={preview}
-          alt={`Aperçu – ${label}`}
+          alt={`Preview – ${label}`}
           className="mt-1 h-28 w-auto rounded-md border object-cover"
         />
       )}

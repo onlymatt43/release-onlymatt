@@ -130,11 +130,11 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
           body: JSON.stringify({ shootId, docType, ...form }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.detail ? `${data.error}: ${data.detail}` : (data.error ?? "Erreur inconnue"));
+        if (!res.ok) throw new Error(data.detail ? `${data.error}: ${data.detail}` : (data.error ?? "Unknown error"));
         if (data.participationId) setParticipationId(data.participationId);
         setStatus("success");
       } catch (err) {
-        setErrorMsg(err instanceof Error ? err.message : "Erreur réseau");
+        setErrorMsg(err instanceof Error ? err.message : "Network error");
         setStatus("error");
       }
     },
@@ -146,9 +146,9 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
       <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-md text-center">
           <CardHeader>
-            <CardTitle className="text-green-600">Consentement enregistré ✓</CardTitle>
+            <CardTitle className="text-green-600">Consent recorded ✓</CardTitle>
             <CardDescription>
-              Merci {form.legalName.split(" ")[0]}. Ton formulaire a bien été soumis.
+              Thank you {form.legalName.split(" ")[0]}. Your form has been successfully submitted.
             </CardDescription>
           </CardHeader>
           {participationId && (
@@ -159,7 +159,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors"
               >
-                📄 Voir / imprimer ton document
+                📄 View / print your document
               </a>
             </CardContent>
           )}
@@ -179,8 +179,8 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
             </div>
           )}
           <CardDescription>
-            Tous les champs marqués * sont obligatoires. Tes documents sont chiffrés
-            et stockés de façon sécurisée.
+            All fields marked * are required. Your documents are encrypted
+            and stored securely.
           </CardDescription>
         </CardHeader>
 
@@ -190,16 +190,16 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
             {/* ── Identité ── */}
             <section className="flex flex-col gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Identité
+                Identity
               </h2>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-legal`}>Nom légal (pièce d&apos;identité) *</Label>
+                <Label htmlFor={`${uid}-legal`}>Legal name (ID document) *</Label>
                 <Input
                   id={`${uid}-legal`}
                   type="text"
                   autoComplete="name"
-                  placeholder="Prénom NOM"
+                  placeholder="First LAST"
                   value={form.legalName}
                   onChange={(e) => set("legalName", e.target.value)}
                   required
@@ -207,11 +207,11 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-stage`}>Nom de scène / Pseudo *</Label>
+                <Label htmlFor={`${uid}-stage`}>Stage name / Alias *</Label>
                 <Input
                   id={`${uid}-stage`}
                   type="text"
-                  placeholder="ex: OnlyMatt"
+                  placeholder="e.g. OnlyMatt"
                   value={form.stageName}
                   onChange={(e) => set("stageName", e.target.value)}
                   required
@@ -219,11 +219,11 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-mainurl`}>Profil principal X / Twitter *</Label>
+                <Label htmlFor={`${uid}-mainurl`}>Main X / Twitter profile *</Label>
                 <Input
                   id={`${uid}-mainurl`}
                   type="url"
-                  placeholder="https://x.com/tonpseudo"
+                  placeholder="https://x.com/yourusername"
                   value={form.mainUrl}
                   onChange={(e) => set("mainUrl", e.target.value)}
                   required
@@ -232,7 +232,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
               {shootCategory && (
                 <div className="flex flex-col gap-1">
-                  <Label>Nom du tournage / Catégorie</Label>
+                  <Label>Shoot name / Category</Label>
                   <div className="flex h-9 items-center rounded-md border border-input bg-muted px-3 py-1 text-sm text-muted-foreground">
                     {shootCategory}
                   </div>
@@ -240,7 +240,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               )}
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-dob`}>Date de naissance *</Label>
+                <Label htmlFor={`${uid}-dob`}>Date of birth *</Label>
                 <Input
                   id={`${uid}-dob`}
                   type="date"
@@ -258,7 +258,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   id={`${uid}-email`}
                   type="email"
                   autoComplete="email"
-                  placeholder="toi@exemple.com"
+                  placeholder="you@example.com"
                   value={form.email}
                   onChange={(e) => set("email", e.target.value)}
                   required
@@ -266,7 +266,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-phone`}>Téléphone</Label>
+                <Label htmlFor={`${uid}-phone`}>Phone</Label>
                 <Input
                   id={`${uid}-phone`}
                   type="tel"
@@ -278,12 +278,12 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-address`}>Adresse *</Label>
+                <Label htmlFor={`${uid}-address`}>Address *</Label>
                 <AddressAutocomplete
                   id={`${uid}-address`}
                   value={form.address}
                   onChange={(v) => set("address", v)}
-                  placeholder="123 Rue Exemple, Montréal, QC H1A 1A1"
+                  placeholder="123 Example St, Montreal, QC H1A 1A1"
                   required
                 />
               </div>
@@ -292,11 +292,11 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
             {/* ── Pièce d'identité ── */}
             <section className="flex flex-col gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Pièce d&apos;identité
+                ID Document
               </h2>
 
               <div className="flex flex-col gap-1">
-                <Label htmlFor={`${uid}-doctype`}>Type de document *</Label>
+                <Label htmlFor={`${uid}-doctype`}>Document type *</Label>
                 <select
                   id={`${uid}-doctype`}
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -304,28 +304,28 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
                   onChange={(e) => setDocType(e.target.value)}
                   required
                 >
-                  <option value="">Choisir…</option>
-                  <option value="passport">Passeport</option>
-                  <option value="drivers_license">Permis de conduire</option>
-                  <option value="id_card">Carte d&apos;identité</option>
+                  <option value="">Choose…</option>
+                  <option value="passport">Passport</option>
+                  <option value="drivers_license">Driver's license</option>
+                  <option value="id_card">ID card</option>
                 </select>
               </div>
 
               <FileUploadZone
                 id={`${uid}-recto`}
-                label="Recto de la pièce d'identité *"
+                label="Front of ID document *"
                 r2Key={`contracts/${contractId}/recto.jpg`}
                 onUploaded={(k) => set("rectoIdKey", k)}
               />
               <FileUploadZone
                 id={`${uid}-verso`}
-                label="Verso de la pièce d'identité *"
+                label="Back of ID document *"
                 r2Key={`contracts/${contractId}/verso.jpg`}
                 onUploaded={(k) => set("versoIdKey", k)}
               />
               <FileUploadZone
                 id={`${uid}-selfie`}
-                label="Selfie avec la pièce d'identité *"
+                label="Selfie with ID document *"
                 r2Key={`contracts/${contractId}/selfie.jpg`}
                 onUploaded={(k) => set("selfieKey", k)}
               />
@@ -338,18 +338,18 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               </h2>
 
               <div className="h-32 overflow-y-scroll rounded-md border border-input bg-muted/30 px-3 py-2 text-xs text-muted-foreground leading-relaxed">
-                <p className="font-semibold mb-1">Contrat de cession de droits à l&apos;image et consentement éclairé</p>
-                <p>En signant ce formulaire, le/la soussigné(e) (ci-après « le Modèle ») autorise irrévocablement le photographe/producteur (ci-après « le Producteur ») et ses ayants droit, cessionnaires et licenciés à utiliser, reproduire, modifier, distribuer, publier et concéder sous licence les œuvres photographiques et audiovisuelles réalisées lors de la séance visée par le présent document.</p>
-                <p className="mt-2">Cette autorisation porte notamment sur l&apos;exploitation commerciale et la diffusion sur toute plateforme de contenu numérique, de réseaux sociaux ou de plateformes pour adultes (incluant sans s&apos;y limiter OnlyFans, Fansly, Faphouse) ainsi que sur tout autre support numérique ou physique, présent ou futur, sans restriction géographique ni temporelle. Le Modèle reconnaît que cette cession est consentie à titre définitif et n&apos;ouvre droit à aucune rémunération ultérieure, redevance (royalties) ou droit de regard sur l&apos;utilisation du matériel.</p>
-                <p className="mt-2 font-medium">Le Modèle certifie sous peine de parjure :</p>
+                <p className="font-semibold mb-1">Image Rights Assignment Contract and Informed Consent</p>
+                <p>By signing this form, the undersigned (hereinafter "the Model") irrevocably authorizes the photographer/producer (hereinafter "the Producer") and their successors, assignees, and licensees to use, reproduce, modify, distribute, publish, and license the photographic and audiovisual works created during the session covered by this document.</p>
+                <p className="mt-2">This authorization specifically includes commercial exploitation and distribution on any digital content platform, social networks, or adult platforms (including but not limited to OnlyFans, Fansly, Faphouse) as well as any other digital or physical medium, present or future, without geographical or temporal restriction. The Model acknowledges that this assignment is granted definitively and does not entitle them to any subsequent compensation, royalties, or approval rights over the use of the material.</p>
+                <p className="mt-2 font-medium">The Model certifies under penalty of perjury that:</p>
                 <ul className="mt-1 list-disc pl-4 space-y-1">
-                  <li>Être âgé(e) d&apos;au moins 18 ans à la date de la séance et avoir la pleine capacité juridique.</li>
-                  <li>Que les pièces d&apos;identité fournies sont authentiques, valides et le/la représentent fidèlement.</li>
-                  <li>Agir librement, de manière éclairée, sans contrainte, menace ni état altéré par une quelconque substance.</li>
-                  <li>Avoir lu, compris et accepté l&apos;intégralité du présent contrat avant d&apos;apposer sa signature électronique.</li>
+                  <li>They are at least 18 years of age at the date of the session and have full legal capacity.</li>
+                  <li>The identification documents provided are authentic, valid, and accurately represent them.</li>
+                  <li>They are acting freely, in an informed manner, without constraint, threat, or impairment by any substance.</li>
+                  <li>They have read, understood, and accepted this contract in its entirety before affixing their electronic signature.</li>
                 </ul>
-                <p className="mt-2">Conformément aux exigences légales internationales applicables à la production de contenu pour adultes (notamment les normes de type 18 U.S.C. § 2257 et lois équivalentes sur la vérification des dossiers), les informations d&apos;identité, signatures et documents de vérification fournis seront conservés de façon strictement confidentielle et sécurisée pour la durée minimale exigée par la loi.</p>
-                <p className="mt-2">La présente autorisation est définitive, irrévocable, exclusive et transmissible. Le Modèle renonce expressément à toute réclamation, poursuite ou recours lié à l&apos;utilisation, la modification ou la publication des œuvres dans le cadre prévu aux présentes.</p>
+                <p className="mt-2">In accordance with international legal requirements applicable to adult content production (notably standards such as 18 U.S.C. § 2257 and equivalent record-keeping laws), the identity information, signatures, and verification documents provided will be retained in a strictly confidential and secure manner for the minimum duration required by law.</p>
+                <p className="mt-2">This authorization is final, irrevocable, exclusive, and transferable. The Model expressly waives any claim, lawsuit, or recourse related to the use, modification, or publication of the works within the scope provided herein.</p>
               </div>
 
               <SignaturePad
@@ -361,22 +361,22 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
             {/* ── Consentements ── */}
             <section className="flex flex-col gap-2">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Consentements *
+                Consents *
               </h2>
 
               {(
                 [
                   {
                     key: "consentRecording",
-                    label: "J'autorise l'enregistrement de ma participation.",
+                    label: "I authorize the recording of my participation.",
                   },
                   {
                     key: "consentPublication",
-                    label: "J'autorise la publication du contenu sur les plateformes prévues (OnlyFans, Faphouse, Fansly, etc.).",
+                    label: "I authorize the publication of content on the specified platforms (OnlyFans, Faphouse, Fansly, etc.).",
                   },
                   {
                     key: "consentAdult",
-                    label: "Je certifie être majeur(e) (18+) et consentir librement et sans contrainte.",
+                    label: "I certify that I am of legal age (18+) and consent freely and without constraint.",
                   },
                 ] as const
               ).map(({ key, label }) => (
@@ -404,7 +404,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               disabled={!isReady || status === "submitting"}
               className="w-full"
             >
-              {status === "submitting" ? "Envoi en cours…" : "Soumettre le consentement"}
+              {status === "submitting" ? "Submitting…" : "Submit consent"}
             </Button>
           </form>
         </CardContent>

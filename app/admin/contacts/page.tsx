@@ -40,25 +40,25 @@ export default async function ContactsPage() {
         <div className="rounded-lg border bg-background">
           <div className="border-b px-4 py-3">
             <h2 className="font-semibold">
-              Tous les modèles{" "}
+              All models{" "}
               <span className="text-muted-foreground font-normal">({contacts.length})</span>
             </h2>
           </div>
 
           {contacts.length === 0 ? (
             <p className="p-6 text-center text-sm text-muted-foreground">
-              Aucun contact enregistré.
+              No contacts registered.
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nom légal</TableHead>
-                  <TableHead>Nom de scène</TableHead>
+                  <TableHead>Legal name</TableHead>
+                  <TableHead>Stage name</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Profil X</TableHead>
+                  <TableHead>X profile</TableHead>
                   <TableHead>Shoots</TableHead>
-                  <TableHead>Mis à jour</TableHead>
+                  <TableHead>Updated</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -79,7 +79,7 @@ export default async function ContactsPage() {
                       <span className="text-sm font-medium">{c.participation_count ?? 0}</span>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {new Date(c.updated_at).toLocaleDateString("fr-CA")}
+                      {new Date(c.updated_at).toLocaleDateString("en-CA")}
                     </TableCell>
                   </TableRow>
                 ))}

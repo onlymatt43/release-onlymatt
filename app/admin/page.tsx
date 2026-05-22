@@ -31,7 +31,7 @@ export default async function AdminPage() {
               <Button variant="outline" size="sm">Contacts</Button>
             </Link>
             <Link href="/admin/shoots/new">
-              <Button size="sm">+ Nouveau shoot</Button>
+              <Button size="sm">+ New shoot</Button>
             </Link>
             <LogoutButton />
           </div>
@@ -42,9 +42,9 @@ export default async function AdminPage() {
         {shoots.length === 0 ? (
           <div className="rounded-lg border border-dashed p-12 text-center">
             <p className="text-muted-foreground">
-              Aucun shoot pour l&apos;instant.{" "}
+              No shoots yet.{" "}
               <Link href="/admin/shoots/new" className="underline">
-                Créez-en un.
+                Create one.
               </Link>
             </p>
           </div>

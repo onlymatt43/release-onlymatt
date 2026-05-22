@@ -36,7 +36,7 @@ export default function ShootCard({ shoot, baseUrl }: ShootCardProps) {
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-base leading-tight">{shoot.title}</CardTitle>
           <Badge variant="secondary" className="shrink-0">
-            {shoot.contract_count ?? 0} contrat{(shoot.contract_count ?? 0) !== 1 ? "s" : ""}
+            {shoot.contract_count ?? 0} contract{(shoot.contract_count ?? 0) !== 1 ? "s" : ""}
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground">
@@ -47,11 +47,11 @@ export default function ShootCard({ shoot, baseUrl }: ShootCardProps) {
 
       <CardContent className="flex flex-wrap gap-2 pt-0">
         <Link href={`/admin/shoots/${shoot.id}`}>
-          <Button variant="outline" size="sm">Voir les contrats</Button>
+          <Button variant="outline" size="sm">View contracts</Button>
         </Link>
 
         <Button variant="outline" size="sm" onClick={handleCopy}>
-          {copied ? "✓ Copié !" : "Copier le lien"}
+          {copied ? "✓ Copied!" : "Copy link"}
         </Button>
 
         <Dialog>
@@ -69,7 +69,7 @@ export default function ShootCard({ shoot, baseUrl }: ShootCardProps) {
               {consentUrl}
             </p>
             <Button variant="outline" size="sm" onClick={handleCopy}>
-              {copied ? "✓ Copié !" : "Copier le lien"}
+              {copied ? "✓ Copied!" : "Copy link"}
             </Button>
           </DialogContent>
         </Dialog>
