@@ -143,43 +143,46 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
   if (status === "success") {
     return (
-      <Card className="w-full max-w-md text-center shadow-2xl border-emerald-800/50 bg-slate-950/90 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-emerald-400">Consent recorded ✓</CardTitle>
-          <CardDescription className="text-slate-300">
-            Thank you {form.legalName.split(" ")[0]}. Your form has been successfully submitted.
-          </CardDescription>
-        </CardHeader>
-        {participationId && (
-          <CardContent>
-            <a
-              href={`/signed/${participationId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white rounded-lg text-sm font-medium transition-all shadow-lg"
-            >
-              📄 View / print your document
-            </a>
-          </CardContent>
-        )}
-      </Card>
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <Card className="w-full max-w-md text-center">
+          <CardHeader>
+            <CardTitle className="text-green-600">Consent recorded ✓</CardTitle>
+            <CardDescription>
+              Thank you {form.legalName.split(" ")[0]}. Your form has been successfully submitted.
+            </CardDescription>
+          </CardHeader>
+          {participationId && (
+            <CardContent>
+              <a
+                href={`/signed/${participationId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors"
+              >
+                📄 View / print your document
+              </a>
+            </CardContent>
+          )}
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full max-w-lg shadow-2xl border-slate-800/50 bg-slate-950/90 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-slate-100">Model Release Form</CardTitle>
-        {shootTitle && (
-          <div className="mt-1 rounded-md bg-slate-900/80 border border-slate-800 px-3 py-2 text-sm">
-            <span className="font-medium text-slate-200">{shootTitle}</span>
-          </div>
-        )}
-        <CardDescription className="text-slate-400">
-          All fields marked * are required. Your documents are encrypted
-          and stored securely.
-        </CardDescription>
-      </CardHeader>
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-lg">
+        <CardHeader>
+          <CardTitle>Model Release Form</CardTitle>
+          {shootTitle && (
+            <div className="mt-1 rounded-md bg-muted px-3 py-2 text-sm">
+              <span className="font-medium">{shootTitle}</span>
+            </div>
+          )}
+          <CardDescription>
+            All fields marked * are required. Your documents are encrypted
+            and stored securely.
+          </CardDescription>
+        </CardHeader>
 
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
@@ -399,12 +402,13 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
             <Button
               type="submit"
               disabled={!isReady || status === "submitting"}
-              className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white"
+              className="w-full"
             >
               {status === "submitting" ? "Submitting…" : "Submit consent"}
             </Button>
           </form>
         </CardContent>
       </Card>
+    </div>
   );
 }
