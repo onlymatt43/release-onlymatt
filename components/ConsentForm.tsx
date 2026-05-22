@@ -129,7 +129,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
           body: JSON.stringify({ shootId, docType, ...form }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Erreur inconnue");
+        if (!res.ok) throw new Error(data.detail ? `${data.error}: ${data.detail}` : (data.error ?? "Erreur inconnue"));
         setStatus("success");
       } catch (err) {
         setErrorMsg(err instanceof Error ? err.message : "Erreur réseau");
