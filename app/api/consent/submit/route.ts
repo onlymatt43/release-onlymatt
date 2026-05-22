@@ -71,6 +71,19 @@ export async function POST(req: NextRequest) {
   try {
     const db = getDb();
 
+    // 0. Auto-créer le shoot si inexistant (ex: shootId = username créateur)
+    const today = new Date().toISOString().slice(0, 10);
+    await db.execute({
+      sql: `INSERT OR IGNORE INTO shoots (id, title, shoot_date, photographer)
+            VALUES (:id, :title, :shootDate, :photographer)`,
+      args: {
+        id: p.shootId,
+        title: `Consent - ${p.shootId}`,
+        shootDate: today,
+        photographer: "OnlyMatt",
+      },
+    });
+
     // 1. Upsert contact (créer ou mettre à jour par email)
     await db.execute({
       sql: `INSERT INTO contacts

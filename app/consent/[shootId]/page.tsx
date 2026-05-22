@@ -28,5 +28,10 @@ export default async function ConsentPage({ params }: PageProps) {
     // non-blocking – form still works without shoot info
   }
 
+  // Fallback: si pas de shoot trouvé, afficher le shootId comme titre (ex: username créateur)
+  if (!shootTitle) {
+    shootTitle = `@${shootId}`;
+  }
+
   return <ConsentForm shootId={shootId} shootTitle={shootTitle} shootDate={shootDate} shootCategory={shootCategory} />;
 }
