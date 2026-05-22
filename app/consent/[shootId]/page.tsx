@@ -1,5 +1,6 @@
 import { getDb } from "@/lib/db";
 import ConsentForm from "@/components/ConsentForm";
+import VelvetBackground from "@/components/VelvetBackground";
 
 export const dynamic = "force-dynamic";
 
@@ -33,5 +34,26 @@ export default async function ConsentPage({ params }: PageProps) {
     shootTitle = `@${shootId}`;
   }
 
-  return <ConsentForm shootId={shootId} shootTitle={shootTitle} shootDate={shootDate} shootCategory={shootCategory} />;
+  return (
+    <VelvetBackground>
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
+        {/* Elegant header with OnlyCard branding */}
+        <div className="mb-8 text-center animate-fade-in-up">
+          <h1 className="text-2xl font-extralight uppercase tracking-[0.2em] mb-2">
+            <span className="text-gradient-emerald-cyan">OnlyMatt</span>
+          </h1>
+          <div className="separator-velvet mx-auto mb-3" />
+          <p className="text-slate-300 text-xs uppercase tracking-[0.25em]">Model Release</p>
+        </div>
+
+        {/* Consent Form */}
+        <ConsentForm 
+          shootId={shootId} 
+          shootTitle={shootTitle} 
+          shootDate={shootDate} 
+          shootCategory={shootCategory} 
+        />
+      </div>
+    </VelvetBackground>
+  );
 }
