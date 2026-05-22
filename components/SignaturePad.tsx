@@ -15,6 +15,10 @@ export default function SignaturePad({ onChange, onClear }: SignaturePadProps) {
   const sigRef = useRef<SignatureCanvas>(null);
 
   const handleEnd = useCallback(() => {
+    if (sigRef.current?.isEmpty()) {
+      onChange("");
+      return;
+    }
     const dataUrl = sigRef.current?.toDataURL("image/png");
     if (dataUrl) onChange(dataUrl);
   }, [onChange]);

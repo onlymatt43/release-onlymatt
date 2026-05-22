@@ -48,6 +48,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "mainUrl is required" }, { status: 422 });
   if (!p.birthDate || !isValidDate(p.birthDate))
     return NextResponse.json({ error: "birthDate must be YYYY-MM-DD" }, { status: 422 });
+
+  // Verify model is at least 18 years old
+  const birthDate = new Date(p.birthDate);
+  const eighteenYearsAgo = new Date();
+  eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+  if (birthDate > eighteenYearsAgo) {
+    return NextResponse.json(
+      { error: "Model must be at least 18 years old" },
+      { status: 422 }
+    );
+  }
+
   if (!p.email || !isValidEmail(p.email))
     return NextResponse.json({ error: "A valid email is required" }, { status: 422 });
   if (!p.address || typeof p.address !== "string" || p.address.trim().length < 5)
