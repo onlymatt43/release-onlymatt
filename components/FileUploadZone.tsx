@@ -49,11 +49,15 @@ export default function FileUploadZone({
       let compressed: File;
       try {
         compressed = await imageCompression(file, COMPRESSION_OPTIONS);
-      } catch {
+      } catch (err) {
         setStatus("error");
         setError("Error compressing image.");
+        console.error("[FileUpload] Compression error:", err);
         return;
       }
+
+      // Force JPEG content type after compression
+      const contentType = "image/jpeg";
 
       // Aperçu local
       setPreview(URL.createObjectURL(compressed));
@@ -66,15 +70,19 @@ export default function FileUploadZone({
         const res = await fetch("/api/consent/sign-url", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ key: r2Key, contentType: compressed.type }),
+          body: JSON.stringify({ key: r2Key, contentType }),
         });
-        if (!res.ok) throw new Error(`sign-url: ${res.status}`);
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          console.error("[FileUpload] sign-url failed:", res.status, errorData);
+          throw new Error(`sign-url: ${res.status}`);
+        }
         const data = (await res.json()) as { url: string };
         presignedUrl = data.url;
       } catch (err) {
         setStatus("error");
         setError("Unable to obtain upload URL. Please try again.");
-        console.error(err);
+        console.error("[FileUpload] Presigned URL error:", err);
         return;
       }
 
@@ -82,14 +90,18 @@ export default function FileUploadZone({
       try {
         const upload = await fetch(presignedUrl, {
           method: "PUT",
-          headers: { "Content-Type": compressed.type },
+          headers: { "Content-Type": contentType },
           body: compressed,
         });
-        if (!upload.ok) throw new Error(`R2 PUT: ${upload.status}`);
+        if (!upload.ok) {
+          const errorText = await upload.text().catch(() => "");
+          console.error("[FileUpload] R2 PUT failed:", upload.status, errorText);
+          throw new Error(`R2 PUT: ${upload.status}`);
+        }
       } catch (err) {
         setStatus("error");
         setError("Upload error. Check your connection.");
-        console.error(err);
+        console.error("[FileUpload] Upload error:", err);
         return;
       }
 

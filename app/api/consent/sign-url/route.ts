@@ -17,13 +17,15 @@ export async function POST(req: NextRequest) {
   let body: unknown;
   try {
     body = await req.json();
-  } catch {
+  } catch (err) {
+    console.error("[sign-url] Invalid JSON:", err);
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { key, contentType } = body as Record<string, unknown>;
 
   if (typeof key !== "string" || !key.startsWith("contracts/")) {
+    console.error("[sign-url] Invalid key:", key);
     return NextResponse.json(
       { error: "Invalid or unauthorized key" },
       { status: 400 }
@@ -31,6 +33,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (typeof contentType !== "string" || !ALLOWED_CONTENT_TYPES.has(contentType)) {
+    console.error("[sign-url] Invalid content type:", contentType);
     return NextResponse.json(
       { error: "Unsupported content type" },
       { status: 415 }
@@ -48,6 +51,7 @@ export async function POST(req: NextRequest) {
       expiresIn: PRESIGNED_URL_TTL_SECONDS,
     });
 
+    console.log("[sign-url] Generated URL for:", key, "type:", contentType);
     return NextResponse.json({ url });
   } catch (err) {
     console.error("[sign-url] Error generating presigned URL:", err);
