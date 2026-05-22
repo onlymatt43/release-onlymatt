@@ -143,10 +143,10 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
   if (status === "success") {
     return (
-      <Card className="w-full max-w-md text-center shadow-2xl border border-slate-700/50 bg-white/[0.03] backdrop-blur-sm rounded-2xl">
+      <Card className="w-full max-w-md text-center shadow-2xl border-emerald-800/50 bg-slate-950/90 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-emerald-400 text-xl tracking-wide">Consent recorded ✓</CardTitle>
-          <CardDescription className="text-slate-300 leading-relaxed">
+          <CardTitle className="text-emerald-400">Consent recorded ✓</CardTitle>
+          <CardDescription className="text-slate-300">
             Thank you {form.legalName.split(" ")[0]}. Your form has been successfully submitted.
           </CardDescription>
         </CardHeader>
@@ -156,7 +156,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               href={`/signed/${participationId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white rounded-xl text-sm font-medium transition-all shadow-lg tracking-wide"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white rounded-lg text-sm font-medium transition-all shadow-lg"
             >
               📄 View / print your document
             </a>
@@ -167,15 +167,15 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
   }
 
   return (
-    <Card className="w-full max-w-lg shadow-2xl border border-slate-700/50 bg-white/[0.03] backdrop-blur-sm rounded-2xl">
+    <Card className="w-full max-w-lg shadow-2xl border-slate-800/50 bg-slate-950/90 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="text-slate-100 tracking-wide">Model Release Form</CardTitle>
+        <CardTitle className="text-slate-100">Model Release Form</CardTitle>
         {shootTitle && (
-          <div className="mt-2 rounded-xl border border-slate-700/40 bg-black/20 px-4 py-2.5 text-sm">
+          <div className="mt-1 rounded-md bg-slate-900/80 border border-slate-800 px-3 py-2 text-sm">
             <span className="font-medium text-slate-200">{shootTitle}</span>
           </div>
         )}
-        <CardDescription className="text-slate-400 text-sm leading-relaxed">
+        <CardDescription className="text-slate-400">
           All fields marked * are required. Your documents are encrypted
           and stored securely.
         </CardDescription>
