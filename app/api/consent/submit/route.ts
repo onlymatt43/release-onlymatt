@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
     const contactId = contactRow.rows[0].id as string;
 
     // 3. Créer la participation
-    await db.execute({
+    const partResult = await db.execute({
       sql: `INSERT INTO participations
               (contact_id, shoot_id, category, signature_data,
                consent_recording, consent_publication, consent_adult,
@@ -136,7 +136,8 @@ export async function POST(req: NextRequest) {
             VALUES
               (:contactId, :shootId, :category, :signatureData,
                :consentRecording, :consentPublication, :consentAdult,
-               :ipAddress, :userAgent)`,
+               :ipAddress, :userAgent)
+            RETURNING id`,
       args: {
         contactId,
         shootId:            p.shootId,
@@ -149,8 +150,9 @@ export async function POST(req: NextRequest) {
         userAgent,
       },
     });
+    const participationId = partResult.rows[0].id as string;
 
-    return NextResponse.json({ success: true, contactId }, { status: 201 });
+    return NextResponse.json({ success: true, contactId, participationId }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[consent/submit] error:", message);

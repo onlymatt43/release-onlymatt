@@ -89,6 +89,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [participationId, setParticipationId] = useState<string | null>(null);
 
   const contractId = `${shootId}-${uid.replace(/:/g, "")}`;
 
@@ -130,6 +131,7 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail ? `${data.error}: ${data.detail}` : (data.error ?? "Erreur inconnue"));
+        if (data.participationId) setParticipationId(data.participationId);
         setStatus("success");
       } catch (err) {
         setErrorMsg(err instanceof Error ? err.message : "Erreur réseau");
@@ -149,6 +151,18 @@ export default function ConsentForm({ shootId, shootTitle, shootDate, shootCateg
               Merci {form.legalName.split(" ")[0]}. Ton formulaire a bien été soumis.
             </CardDescription>
           </CardHeader>
+          {participationId && (
+            <CardContent>
+              <a
+                href={`/signed/${participationId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors"
+              >
+                📄 Voir / imprimer ton document
+              </a>
+            </CardContent>
+          )}
         </Card>
       </div>
     );
