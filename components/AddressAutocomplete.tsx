@@ -90,19 +90,19 @@ export default function AddressAutocomplete({
         onFocus={() => suggestions.length > 0 && setShowList(true)}
         onBlur={() => setTimeout(() => setShowList(false), 150)}
         className={cn(
-          "flex h-9 w-full rounded-md border border-slate-700/60 bg-black/40 px-3 py-1 text-sm text-slate-100 shadow-sm transition-colors",
-          "placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500/40",
+          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors",
+          "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
           "disabled:cursor-not-allowed disabled:opacity-50",
           className
         )}
       />
       {showList && suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-700/60 bg-black/95 backdrop-blur-sm py-1 text-sm shadow-md">
+        <ul className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover py-1 text-sm shadow-md">
           {suggestions.map((addr, i) => (
             <li
               key={i}
               onMouseDown={() => select(addr)}
-              className="cursor-pointer px-3 py-2 text-slate-200 hover:bg-emerald-500/20 hover:text-emerald-300"
+              className="cursor-pointer px-3 py-2 hover:bg-accent hover:text-accent-foreground"
             >
               {addr}
             </li>

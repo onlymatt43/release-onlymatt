@@ -26,7 +26,7 @@ export default function SignaturePad({ onChange, onClear }: SignaturePadProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="w-full rounded-md border border-slate-700/40 bg-white touch-none overflow-hidden">
+      <div className="w-full rounded-md border border-input bg-white touch-none overflow-hidden">
         <SignatureCanvas
           ref={sigRef}
           canvasProps={{
@@ -45,9 +45,9 @@ export default function SignaturePad({ onChange, onClear }: SignaturePadProps) {
         variant="outline"
         size="sm"
         onClick={handleClear}
-        className="self-end border-slate-700/60 bg-black/40 hover:bg-black/60 text-slate-200"
+        className="self-end"
       >
-        Clear signature
+        Effacer la signature
       </Button>
     </div>
   );
