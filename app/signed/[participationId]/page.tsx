@@ -117,7 +117,7 @@ export default async function SignedPage({ params }: PageProps) {
         .photos { display: flex; gap: 16px; flex-wrap: wrap; page-break-inside: avoid; break-inside: avoid; }
         .photo-item { page-break-inside: avoid; break-inside: avoid; }
         .photo-item label { font-size: 10px; color: #888; display: block; margin-bottom: 4px; }
-        .photo-item img { width: 180px; height: 120px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block; }
+        .photo-item img { max-width: 180px; width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px; display: block; }
         .footer { margin-top: 40px; border-top: 1px solid #ddd; padding-top: 12px; font-size: 10px; color: #999; display: flex; justify-content: space-between; }
         .print-btn-bar { display: flex; justify-content: flex-end; padding: 16px 40px 0; gap: 12px; }
       `}</style>

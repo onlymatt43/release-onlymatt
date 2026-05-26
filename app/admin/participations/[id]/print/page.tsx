@@ -150,7 +150,7 @@ export default async function PrintParticipationPage({ params }: PageProps) {
         .photo-item { page-break-inside: avoid; break-inside: avoid; }
         .photo-item label { font-size: 10px; color: #888; display: block; margin-bottom: 4px; }
         .photo-item img {
-          width: 180px; height: 120px; object-fit: cover;
+          max-width: 180px; width: 100%; height: auto;
           border: 1px solid #ccc; border-radius: 4px; display: block;
         }
         .footer {
