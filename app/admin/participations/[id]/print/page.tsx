@@ -146,7 +146,8 @@ export default async function PrintParticipationPage({ params }: PageProps) {
           background: #fafafa; display: inline-block;
         }
         .sig-box img { display: block; max-height: 120px; max-width: 400px; }
-        .photos { display: flex; gap: 16px; flex-wrap: wrap; }
+        .photos { display: flex; gap: 16px; flex-wrap: wrap; page-break-inside: avoid; break-inside: avoid; }
+        .photo-item { page-break-inside: avoid; break-inside: avoid; }
         .photo-item label { font-size: 10px; color: #888; display: block; margin-bottom: 4px; }
         .photo-item img {
           width: 180px; height: 120px; object-fit: cover;
